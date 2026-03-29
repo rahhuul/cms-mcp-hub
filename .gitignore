@@ -11,3 +11,11 @@ coverage/
 .vscode/
 !.vscode/extensions.json
 .idea/
+
+
+
+# Local only
+SYSTEM-PROMPT.md
+PRD.md
+API-RESEARCH.md
+CLAUDE.md
