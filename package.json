@@ -1,0 +1,58 @@
+{
+  "name": "cms-mcp-hub",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MCP servers for every major CMS platform — Framer, WooCommerce, Strapi, Ghost, Webflow, Payload, Shopify, Contentful, Wix, Yoast, Sanity",
+  "author": "Rahul <rahhuul>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rahhuul/cms-mcp-hub"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "cms",
+    "wordpress",
+    "framer",
+    "shopify",
+    "strapi",
+    "ghost",
+    "webflow",
+    "contentful",
+    "sanity",
+    "woocommerce",
+    "ai",
+    "claude",
+    "cursor"
+  ],
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "test": "turbo test",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "clean": "turbo clean && rm -rf node_modules",
+    "format": "prettier --write \"packages/*/src/**/*.ts\"",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "turbo build && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.0",
+    "@types/node": "^20.11.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.0",
+    "tsup": "^8.0.0",
+    "turbo": "^2.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "packageManager": "npm@10.0.0"
+}
