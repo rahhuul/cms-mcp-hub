@@ -9,9 +9,11 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/rahhuul/cms-mcp-hub/actions/workflows/ci.yml"><img src="https://github.com/rahhuul/cms-mcp-hub/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://www.npmjs.com/package/@cmsmcp/wordpress"><img src="https://img.shields.io/npm/v/@cmsmcp/wordpress.svg?label=wordpress" alt="npm wordpress"></a>
+  <a href="https://www.npmjs.com/package/@cmsmcp/woocommerce"><img src="https://img.shields.io/npm/v/@cmsmcp/woocommerce.svg?label=woocommerce" alt="npm woocommerce"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a>
   <a href="#packages"><img src="https://img.shields.io/badge/Tools-292-blue.svg" alt="292 Tools"></a>
-  <a href="#packages"><img src="https://img.shields.io/badge/CMS_Platforms-6-orange.svg" alt="6 CMS Platforms"></a>
   <a href="#packages"><img src="https://img.shields.io/badge/Tests-190_passing-brightgreen.svg" alt="190 Tests"></a>
   <img src="https://img.shields.io/badge/TypeScript-strict-blue.svg" alt="TypeScript Strict">
   <img src="https://img.shields.io/badge/Node.js-18+-green.svg" alt="Node 18+">
