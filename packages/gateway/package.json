@@ -1,6 +1,6 @@
 {
   "name": "@cmsmcp/gateway",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Universal REST API gateway for CMS MCP Hub — exposes all MCP tools as HTTP endpoints with OpenAPI spec, works with ChatGPT, Gemini, n8n, LangChain, and any HTTP client",
   "type": "module",
   "main": "./dist/index.js",
@@ -23,7 +23,7 @@
     "clean": "rm -rf dist .turbo"
   },
   "dependencies": {
-    "@cmsmcp/shared": "^0.2.0",
+    "@cmsmcp/shared": "^0.3.0",
     "zod": "^3.22.0"
   },
   "devDependencies": {
