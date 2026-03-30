@@ -1,46 +1,49 @@
-# CMS MCP Hub
+<p align="center">
+  <h1 align="center">CMS MCP Hub</h1>
+  <p align="center">
+    <strong>292 MCP tools for managing CMS platforms with AI</strong>
+  </p>
+  <p align="center">
+    Connect Claude, Cursor, Windsurf, Copilot, or any MCP client to WordPress, WooCommerce, Framer, Strapi, Ghost, and more.
+  </p>
+</p>
 
-> MCP servers for every major CMS platform. Connect AI agents to your CMS.
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a>
+  <a href="#packages"><img src="https://img.shields.io/badge/Tools-292-blue.svg" alt="292 Tools"></a>
+  <a href="#packages"><img src="https://img.shields.io/badge/CMS_Platforms-6-orange.svg" alt="6 CMS Platforms"></a>
+  <a href="#packages"><img src="https://img.shields.io/badge/Tests-190_passing-brightgreen.svg" alt="190 Tests"></a>
+  <img src="https://img.shields.io/badge/TypeScript-strict-blue.svg" alt="TypeScript Strict">
+  <img src="https://img.shields.io/badge/Node.js-18+-green.svg" alt="Node 18+">
+</p>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+---
 
 ## What is this?
 
-CMS MCP Hub is a collection of [Model Context Protocol](https://modelcontextprotocol.io/) servers that let AI assistants (Claude, Cursor, Claude Code, VS Code Copilot) manage your CMS content programmatically.
+CMS MCP Hub is a monorepo of [Model Context Protocol](https://modelcontextprotocol.io/) servers that let AI assistants manage your CMS content. Each package is a standalone MCP server you can run with one command.
 
-**One `npx` command. Your AI can manage your website.**
+**Your AI assistant can now create posts, manage products, upload images, update SEO, and more — across any CMS.**
 
-## Packages
-
-| Package | CMS | Status | Install |
-|---------|-----|--------|---------|
-| `@cmsmcp/framer` | Framer | 🚧 Building | `npx @cmsmcp/framer` |
-| `@cmsmcp/woocommerce` | WooCommerce | 🚧 Building | `npx @cmsmcp/woocommerce` |
-| `@cmsmcp/strapi` | Strapi | 🚧 Building | `npx @cmsmcp/strapi` |
-| `@cmsmcp/ghost` | Ghost | 🚧 Building | `npx @cmsmcp/ghost` |
-| `@cmsmcp/webflow` | Webflow | 📋 Planned | `npx @cmsmcp/webflow` |
-| `@cmsmcp/payload` | Payload CMS | 📋 Planned | `npx @cmsmcp/payload` |
-| `@cmsmcp/shopify` | Shopify | 📋 Planned | `npx @cmsmcp/shopify` |
-| `@cmsmcp/contentful` | Contentful | 📋 Planned | `npx @cmsmcp/contentful` |
-| `@cmsmcp/wix` | Wix | 📋 Planned | `npx @cmsmcp/wix` |
-| `@cmsmcp/yoast` | Yoast SEO | 📋 Planned | `npx @cmsmcp/yoast` |
-| `@cmsmcp/sanity` | Sanity | 📋 Planned | `npx @cmsmcp/sanity` |
+```
+You: "Create a blog post about AI tools, add a featured image, and optimize SEO"
+Claude: Creates post → uploads image → sets categories/tags → writes meta description → publishes
+```
 
 ## Quick Start
 
 ### Claude Desktop
 
-Add to your `claude_desktop_config.json`:
-
 ```json
 {
   "mcpServers": {
-    "framer": {
+    "wordpress": {
       "command": "npx",
-      "args": ["-y", "@cmsmcp/framer"],
+      "args": ["-y", "@cmsmcp/wordpress"],
       "env": {
-        "FRAMER_PROJECT_URL": "https://framer.com/projects/your-project-id",
-        "FRAMER_API_KEY": "your-api-key"
+        "WORDPRESS_URL": "https://yoursite.com",
+        "WORDPRESS_USERNAME": "admin",
+        "WORDPRESS_APP_PASSWORD": "xxxx xxxx xxxx xxxx"
       }
     }
   }
@@ -50,59 +53,218 @@ Add to your `claude_desktop_config.json`:
 ### Claude Code
 
 ```bash
-claude mcp add framer -- npx -y @cmsmcp/framer
-```
-
-### Cursor
-
-Add to `.cursor/mcp.json` in your project:
-
-```json
+# Add to .mcp.json in your project
 {
   "mcpServers": {
-    "framer": {
+    "wordpress": {
       "command": "npx",
-      "args": ["-y", "@cmsmcp/framer"],
+      "args": ["-y", "@cmsmcp/wordpress"],
       "env": {
-        "FRAMER_PROJECT_URL": "https://framer.com/projects/your-project-id",
-        "FRAMER_API_KEY": "your-api-key"
+        "WORDPRESS_URL": "https://yoursite.com",
+        "WORDPRESS_USERNAME": "admin",
+        "WORDPRESS_APP_PASSWORD": "xxxx xxxx xxxx xxxx"
       }
     }
   }
 }
 ```
 
-## Why CMS MCP Hub?
+### Cursor / Windsurf / Cline / Any MCP Client
 
-- **One command per CMS** — No complex setup. Just `npx` and go.
-- **Deep integrations** — Not shallow wrappers. Full CRUD, pagination, batch ops.
-- **AI-native** — Tool descriptions designed for LLMs to understand and use correctly.
-- **TypeScript-first** — Full type safety, Zod validation on all inputs.
-- **Open source** — MIT licensed. Contribute, fork, extend.
+Same JSON config format — just add to your client's MCP settings.
+
+## Packages
+
+| Package | CMS | Tools | Status | Install |
+|---------|-----|-------|--------|---------|
+| [`@cmsmcp/wordpress`](packages/wordpress-mcp/) | WordPress | **143** | Ready | `npx @cmsmcp/wordpress` |
+| [`@cmsmcp/woocommerce`](packages/woocommerce-mcp/) | WooCommerce | **95** | Ready | `npx @cmsmcp/woocommerce` |
+| [`@cmsmcp/framer`](packages/framer-mcp/) | Framer | **20** | Ready | `npx @cmsmcp/framer` |
+| [`@cmsmcp/strapi`](packages/strapi-mcp/) | Strapi | **17** | Ready | `npx @cmsmcp/strapi` |
+| [`@cmsmcp/ghost`](packages/ghost-mcp/) | Ghost | **17** | Ready | `npx @cmsmcp/ghost` |
+| [`@cmsmcp/gateway`](packages/gateway/) | REST API | — | Ready | `npx @cmsmcp/gateway` |
+| `@cmsmcp/webflow` | Webflow | — | Planned | — |
+| `@cmsmcp/shopify` | Shopify | — | Planned | — |
+| `@cmsmcp/contentful` | Contentful | — | Planned | — |
+| `@cmsmcp/payload` | Payload CMS | — | Planned | — |
+| `@cmsmcp/sanity` | Sanity | — | Planned | — |
+| `@cmsmcp/wix` | Wix | — | Planned | — |
+| `@cmsmcp/yoast` | Yoast SEO | — | Planned | — |
+
+## What can you do?
+
+### WordPress (143 tools)
+
+| Category | Examples |
+|----------|---------|
+| **Content** | Create/edit/delete posts, pages, media with file upload |
+| **Taxonomy** | Manage categories, tags, custom post types, custom taxonomies |
+| **Users** | Create users, manage roles, application passwords |
+| **Menus** | Create navigation menus with items in one call |
+| **Plugins** | Install, activate, deactivate, delete plugins |
+| **Themes** | List/switch themes |
+| **Blocks** | Reusable blocks, block types, patterns, renderer |
+| **Site Editor** | Templates, template parts, navigation, global styles |
+| **Revisions** | Browse/restore post, page, template revisions |
+| **Fonts** | Manage font families and font faces |
+| **SEO** | Read/update Yoast SEO fields (title, description, keywords, OG) |
+| **ACF** | Read/update Advanced Custom Fields values |
+| **Workflows** | One-call post creation with categories + tags + image + SEO |
+| **Resources** | 10 browseable data sources (recent posts, drafts, calendar) |
+| **Prompts** | 6 templates (blog creator, SEO audit, site health report) |
+
+### WooCommerce (95 tools)
+
+| Category | Examples |
+|----------|---------|
+| **Products** | CRUD + variations, attributes, terms, shipping classes |
+| **Orders** | CRUD + notes, refunds |
+| **Customers** | CRUD + downloads |
+| **Coupons** | Create percent/fixed/product discounts with limits |
+| **Reviews** | Moderate product reviews |
+| **Tax** | Tax rates and classes CRUD |
+| **Webhooks** | Create event-driven webhooks |
+| **Reports** | Sales analytics, top sellers, totals |
+| **Settings** | Store settings, payment gateways, shipping zones |
+| **System** | System status, diagnostics, data (countries/currencies) |
+| **Batch** | Batch create/update/delete up to 100 items per call |
+| **Workflows** | Store dashboard, full product creator, order processor |
+
+### Framer (20 tools)
+
+CMS collections, pages, code files, publishing/deployment — via WebSocket API.
+
+### Strapi (17 tools)
+
+Dynamic content type discovery, entry CRUD, publish/unpublish, i18n localization, media, components.
+
+### Ghost (17 tools)
+
+Posts, pages, tags, authors, members, newsletters, tiers — with Admin API JWT auth.
+
+## Gateway — Universal REST API
+
+The gateway exposes all MCP tools as a REST API, making them accessible from any platform:
+
+```bash
+# Start the gateway
+npx @cmsmcp/gateway
+
+# Call any tool via HTTP
+curl -X POST http://localhost:4777/api/wordpress/wp_list_posts \
+  -H "X-API-Key: your-key" \
+  -H "Content-Type: application/json" \
+  -d '{"per_page": 5}'
+```
+
+**Works with:** Python, n8n, Make, Zapier, LangChain, custom apps, any HTTP client.
+
+Features:
+- Auto-generated OpenAPI 3.0 spec at `/openapi.json`
+- Web dashboard with tool browser and live tester
+- API key authentication
+- CORS enabled
+
+## Architecture
+
+```
+cms-mcp-hub/
+├── packages/
+│   ├── shared/              # ApiClient, error handling, pagination, rate limiting
+│   ├── wordpress-mcp/       # 143 tools — WordPress REST API v2
+│   ├── woocommerce-mcp/     # 95 tools — WooCommerce REST API v3
+│   ├── framer-mcp/          # 20 tools — Framer Server API (WebSocket)
+│   ├── strapi-mcp/          # 17 tools — Strapi REST API
+│   ├── ghost-mcp/           # 17 tools — Ghost Admin API (JWT)
+│   └── gateway/             # REST API gateway with OpenAPI spec
+├── turbo.json               # Turborepo build config
+├── tsconfig.base.json       # Shared TypeScript config
+└── package.json             # Monorepo root
+```
+
+**Tech stack:** TypeScript (strict), Node.js 18+, Turborepo, tsup, Zod, Vitest
+
+**Auth per platform:**
+| Platform | Auth Method |
+|----------|-------------|
+| WordPress | Application Passwords (Basic Auth) |
+| WooCommerce | OAuth 1.0a (HTTP) / Basic Auth (HTTPS) |
+| Framer | API Key (WebSocket) |
+| Strapi | Bearer Token |
+| Ghost | JWT (HS256) from Admin API Key |
 
 ## Development
 
 ```bash
-# Clone
 git clone https://github.com/rahhuul/cms-mcp-hub.git
 cd cms-mcp-hub
-
-# Install
 npm install
-
-# Build all
-npx turbo build
+npx turbo build        # Build all packages
+npx turbo test         # Run all tests (190 passing)
 
 # Build specific package
-npx turbo build --filter=@cmsmcp/framer
+npx turbo build --filter=@cmsmcp/wordpress
 
 # Test with MCP Inspector
-npx @modelcontextprotocol/inspector node packages/framer-mcp/dist/index.js
+npx @modelcontextprotocol/inspector node packages/wordpress-mcp/dist/index.js
 ```
+
+## Environment Variables
+
+### WordPress
+```bash
+WORDPRESS_URL=https://yoursite.com
+WORDPRESS_USERNAME=admin
+WORDPRESS_APP_PASSWORD=xxxx xxxx xxxx xxxx   # WP Admin → Users → Profile → Application Passwords
+```
+
+### WooCommerce
+```bash
+WOOCOMMERCE_URL=https://yourstore.com
+WOOCOMMERCE_CONSUMER_KEY=ck_xxx              # WP Admin → WooCommerce → Settings → Advanced → REST API
+WOOCOMMERCE_CONSUMER_SECRET=cs_xxx
+```
+
+### Framer
+```bash
+FRAMER_PROJECT_URL=https://framer.com/projects/your-project-id
+FRAMER_API_KEY=your-api-key                  # Site Settings → General
+```
+
+### Strapi
+```bash
+STRAPI_URL=http://localhost:1337
+STRAPI_API_TOKEN=your-token                  # Settings → API Tokens
+```
+
+### Ghost
+```bash
+GHOST_URL=https://myblog.com
+GHOST_ADMIN_API_KEY=id:secret                # Settings → Integrations → Custom Integration
+```
+
+## Why CMS MCP Hub?
+
+- **292 tools** across 6 CMS platforms — the most comprehensive MCP CMS integration
+- **No plugins required** — connects directly via official APIs
+- **One command** — `npx @cmsmcp/wordpress` and you're connected
+- **AI-native** — tool descriptions designed for LLMs to use correctly
+- **Full CRUD** — not shallow wrappers, complete API coverage
+- **Type-safe** — TypeScript strict mode, Zod validation on all inputs
+- **Battle-tested auth** — OAuth 1.0a, JWT, Application Passwords, Bearer tokens
+- **Workflows** — multi-step operations in a single tool call
+- **Gateway** — REST API makes tools accessible from any platform
+- **Open source** — MIT licensed
 
 ## Contributing
 
-Contributions welcome! See [CONTRIBUTING.md](docs/contributing.md) for guidelines.
+Contributions welcome! The remaining CMS packages (Webflow, Shopify, Contentful, Payload, Sanity, Wix, Yoast) have stub packages ready for implementation.
+
+```bash
+# Add a new CMS package
+cd packages/{cms}-mcp
+# Follow the pattern in packages/wordpress-mcp or packages/ghost-mcp
+```
 
 ## License
 
@@ -110,4 +272,4 @@ MIT — see [LICENSE](LICENSE) for details.
 
 ---
 
-Built by [@rahhuul](https://github.com/rahhuul)
+<p align="center">Built by <a href="https://github.com/rahhuul">@rahhuul</a></p>
