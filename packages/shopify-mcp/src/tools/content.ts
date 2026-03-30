@@ -1,0 +1,39 @@
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { mcpError, mcpSuccess } from "@cmsmcp/shared";
+import type { ShopifyClient } from "../api/client.js";
+import { ListPagesSchema, GetPageSchema, CountPagesSchema, CreatePageSchema, UpdatePageSchema, DeletePageSchema, ListBlogsSchema, GetBlogSchema, CreateBlogSchema, UpdateBlogSchema, DeleteBlogSchema, ListArticlesSchema, GetArticleSchema, CountArticlesSchema, CreateArticleSchema, UpdateArticleSchema, DeleteArticleSchema, ListArticleAuthorsSchema, ListArticleTagsSchema, ListRedirectsSchema, GetRedirectSchema, CountRedirectsSchema, CreateRedirectSchema, UpdateRedirectSchema, DeleteRedirectSchema } from "../schemas/index.js";
+
+export function registerContentTools(server: McpServer, client: ShopifyClient): void {
+  // Pages
+  server.tool("shopify_list_pages", "List store pages.", ListPagesSchema.shape, async (p) => { try { return mcpSuccess(await client.list("pages", ListPagesSchema.parse(p) as Record<string, string | number | boolean | undefined>)); } catch(e) { return mcpError(e, "shopify_list_pages"); } });
+  server.tool("shopify_get_page", "Get a page.", GetPageSchema.shape, async (p) => { try { return mcpSuccess(await client.get(`pages/${GetPageSchema.parse(p).id}`)); } catch(e) { return mcpError(e, "shopify_get_page"); } });
+  server.tool("shopify_count_pages", "Count pages.", CountPagesSchema.shape, async () => { try { return mcpSuccess(await client.get("pages/count")); } catch(e) { return mcpError(e, "shopify_count_pages"); } });
+  server.tool("shopify_create_page", "Create a store page.", CreatePageSchema.shape, async (p) => { try { return mcpSuccess(await client.post("pages", { page: CreatePageSchema.parse(p) })); } catch(e) { return mcpError(e, "shopify_create_page"); } });
+  server.tool("shopify_update_page", "Update a page.", UpdatePageSchema.shape, async (p) => { try { const { id, ...d } = UpdatePageSchema.parse(p); return mcpSuccess(await client.put(`pages/${id}`, { page: d })); } catch(e) { return mcpError(e, "shopify_update_page"); } });
+  server.tool("shopify_delete_page", "Delete a page.", DeletePageSchema.shape, async (p) => { try { await client.del(`pages/${DeletePageSchema.parse(p).id}`); return mcpSuccess({ message: "Page deleted" }); } catch(e) { return mcpError(e, "shopify_delete_page"); } });
+
+  // Blogs
+  server.tool("shopify_list_blogs", "List blogs.", ListBlogsSchema.shape, async (p) => { try { return mcpSuccess(await client.list("blogs", ListBlogsSchema.parse(p) as Record<string, string | number | boolean | undefined>)); } catch(e) { return mcpError(e, "shopify_list_blogs"); } });
+  server.tool("shopify_get_blog", "Get a blog.", GetBlogSchema.shape, async (p) => { try { return mcpSuccess(await client.get(`blogs/${GetBlogSchema.parse(p).id}`)); } catch(e) { return mcpError(e, "shopify_get_blog"); } });
+  server.tool("shopify_create_blog", "Create a blog.", CreateBlogSchema.shape, async (p) => { try { return mcpSuccess(await client.post("blogs", { blog: CreateBlogSchema.parse(p) })); } catch(e) { return mcpError(e, "shopify_create_blog"); } });
+  server.tool("shopify_update_blog", "Update a blog.", UpdateBlogSchema.shape, async (p) => { try { const { id, ...d } = UpdateBlogSchema.parse(p); return mcpSuccess(await client.put(`blogs/${id}`, { blog: d })); } catch(e) { return mcpError(e, "shopify_update_blog"); } });
+  server.tool("shopify_delete_blog", "Delete a blog.", DeleteBlogSchema.shape, async (p) => { try { await client.del(`blogs/${DeleteBlogSchema.parse(p).id}`); return mcpSuccess({ message: "Blog deleted" }); } catch(e) { return mcpError(e, "shopify_delete_blog"); } });
+
+  // Articles
+  server.tool("shopify_list_articles", "List blog articles.", ListArticlesSchema.shape, async (p) => { try { const { blog_id, ...q } = ListArticlesSchema.parse(p); return mcpSuccess(await client.list(`blogs/${blog_id}/articles`, q as Record<string, string | number | boolean | undefined>)); } catch(e) { return mcpError(e, "shopify_list_articles"); } });
+  server.tool("shopify_get_article", "Get a blog article.", GetArticleSchema.shape, async (p) => { try { const { blog_id, article_id } = GetArticleSchema.parse(p); return mcpSuccess(await client.get(`blogs/${blog_id}/articles/${article_id}`)); } catch(e) { return mcpError(e, "shopify_get_article"); } });
+  server.tool("shopify_count_articles", "Count articles in a blog.", CountArticlesSchema.shape, async (p) => { try { return mcpSuccess(await client.get(`blogs/${CountArticlesSchema.parse(p).blog_id}/articles/count`)); } catch(e) { return mcpError(e, "shopify_count_articles"); } });
+  server.tool("shopify_create_article", "Create a blog article.", CreateArticleSchema.shape, async (p) => { try { const { blog_id, ...d } = CreateArticleSchema.parse(p); return mcpSuccess(await client.post(`blogs/${blog_id}/articles`, { article: d })); } catch(e) { return mcpError(e, "shopify_create_article"); } });
+  server.tool("shopify_update_article", "Update a blog article.", UpdateArticleSchema.shape, async (p) => { try { const { blog_id, article_id, ...d } = UpdateArticleSchema.parse(p); return mcpSuccess(await client.put(`blogs/${blog_id}/articles/${article_id}`, { article: d })); } catch(e) { return mcpError(e, "shopify_update_article"); } });
+  server.tool("shopify_delete_article", "Delete a blog article.", DeleteArticleSchema.shape, async (p) => { try { const { blog_id, article_id } = DeleteArticleSchema.parse(p); await client.del(`blogs/${blog_id}/articles/${article_id}`); return mcpSuccess({ message: "Article deleted" }); } catch(e) { return mcpError(e, "shopify_delete_article"); } });
+  server.tool("shopify_list_article_authors", "List all article authors.", ListArticleAuthorsSchema.shape, async () => { try { return mcpSuccess(await client.get("articles/authors")); } catch(e) { return mcpError(e, "shopify_list_article_authors"); } });
+  server.tool("shopify_list_article_tags", "List all article tags.", ListArticleTagsSchema.shape, async (p) => { try { return mcpSuccess(await client.get("articles/tags", ListArticleTagsSchema.parse(p) as Record<string, string | number | boolean | undefined>)); } catch(e) { return mcpError(e, "shopify_list_article_tags"); } });
+
+  // Redirects
+  server.tool("shopify_list_redirects", "List URL redirects.", ListRedirectsSchema.shape, async (p) => { try { return mcpSuccess(await client.list("redirects", ListRedirectsSchema.parse(p) as Record<string, string | number | boolean | undefined>)); } catch(e) { return mcpError(e, "shopify_list_redirects"); } });
+  server.tool("shopify_get_redirect", "Get a redirect.", GetRedirectSchema.shape, async (p) => { try { return mcpSuccess(await client.get(`redirects/${GetRedirectSchema.parse(p).id}`)); } catch(e) { return mcpError(e, "shopify_get_redirect"); } });
+  server.tool("shopify_count_redirects", "Count redirects.", CountRedirectsSchema.shape, async () => { try { return mcpSuccess(await client.get("redirects/count")); } catch(e) { return mcpError(e, "shopify_count_redirects"); } });
+  server.tool("shopify_create_redirect", "Create a URL redirect.", CreateRedirectSchema.shape, async (p) => { try { return mcpSuccess(await client.post("redirects", { redirect: CreateRedirectSchema.parse(p) })); } catch(e) { return mcpError(e, "shopify_create_redirect"); } });
+  server.tool("shopify_update_redirect", "Update a redirect.", UpdateRedirectSchema.shape, async (p) => { try { const { id, ...d } = UpdateRedirectSchema.parse(p); return mcpSuccess(await client.put(`redirects/${id}`, { redirect: d })); } catch(e) { return mcpError(e, "shopify_update_redirect"); } });
+  server.tool("shopify_delete_redirect", "Delete a redirect.", DeleteRedirectSchema.shape, async (p) => { try { await client.del(`redirects/${DeleteRedirectSchema.parse(p).id}`); return mcpSuccess({ message: "Redirect deleted" }); } catch(e) { return mcpError(e, "shopify_delete_redirect"); } });
+}
