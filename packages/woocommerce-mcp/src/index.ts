@@ -24,6 +24,7 @@ import { registerWebhookTools } from "./tools/webhooks.js";
 import { registerSettingsTools } from "./tools/settings.js";
 import { registerSystemTools } from "./tools/system.js";
 import { registerBatchTools } from "./tools/batch.js";
+import { registerWorkflowTools } from "./tools/workflows.js";
 
 const logger = createLogger("woocommerce");
 
@@ -55,6 +56,7 @@ async function main(): Promise<void> {
   registerSettingsTools(server, client);       //  5: settings, shipping zones, payment gateways
   registerSystemTools(server, client);         //  6: system status + data
   registerBatchTools(server, client);          //  1: batch operations
+  registerWorkflowTools(server, client);       //  3: store dashboard, create full product, process order
 
   const transport = new StdioServerTransport();
   await server.connect(transport);

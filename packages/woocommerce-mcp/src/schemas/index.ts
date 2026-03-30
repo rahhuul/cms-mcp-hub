@@ -405,3 +405,30 @@ export const BatchUpdateSchema = z.object({
   update: z.array(z.record(z.string(), z.unknown()).and(z.object({ id: z.number() }))).optional().describe("Items to update (must include id)"),
   delete: z.array(z.number()).optional().describe("Item IDs to delete"),
 });
+
+// ═══════════════════════════════════════════════════════════════════════
+// WOOCOMMERCE WORKFLOWS
+// ═══════════════════════════════════════════════════════════════════════
+
+export const StoreDashboardSchema = z.object({
+  period: z.enum(["week", "month", "last_month", "year"]).default("month"),
+});
+
+export const CreateFullProductSchema = z.object({
+  name: z.string().min(1), type: z.enum(["simple", "variable"]).default("simple"),
+  regular_price: z.string().optional(), description: z.string().optional(),
+  short_description: z.string().optional(), status: z.enum(["publish", "draft"]).default("draft"),
+  category_names: z.array(z.string()).optional().describe("Category names (created if needed)"),
+  tag_names: z.array(z.string()).optional().describe("Tag names (created if needed)"),
+  image_urls: z.array(z.string()).optional().describe("Product image URLs (first = main image)"),
+  sku: z.string().optional(), manage_stock: z.boolean().optional(), stock_quantity: z.number().optional(),
+  attributes: z.array(z.object({ name: z.string(), options: z.array(z.string()), variation: z.boolean().optional() })).optional(),
+  variations: z.array(z.object({ regular_price: z.string(), attributes: z.array(z.object({ name: z.string(), option: z.string() })) })).optional().describe("Auto-create variations (for variable products)"),
+});
+
+export const ProcessOrderSchema = z.object({
+  order_id: z.number().describe("Order ID"),
+  new_status: z.enum(["processing", "completed", "on-hold", "cancelled"]).describe("New status"),
+  customer_note: z.string().optional().describe("Note to send to customer"),
+  private_note: z.string().optional().describe("Internal/private note"),
+});
