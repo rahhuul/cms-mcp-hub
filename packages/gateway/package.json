@@ -1,0 +1,39 @@
+{
+  "name": "@cmsmcp/gateway",
+  "version": "0.1.0",
+  "description": "Universal REST API gateway for CMS MCP Hub — exposes all MCP tools as HTTP endpoints with OpenAPI spec, works with ChatGPT, Gemini, n8n, LangChain, and any HTTP client",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "@cmsmcp/gateway": "./dist/index.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "start": "node dist/index.js",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "@cmsmcp/shared": "*",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "MIT"
+}
