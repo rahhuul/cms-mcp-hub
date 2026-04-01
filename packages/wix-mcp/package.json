@@ -1,12 +1,12 @@
 {
   "name": "@cmsmcp/wix",
-  "version": "0.1.0",
-  "description": "MCP server for Wix CMS platform",
+  "version": "0.3.0",
+  "description": "MCP server for Wix — 18 tools for data collections, eCommerce, contacts, blog, bookings, and site management",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "@cmsmcp/wix": "./dist/index.js"
+    "cmsmcp-wix": "./dist/index.js"
   },
   "exports": {
     ".": {
@@ -15,7 +15,8 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "scripts": {
     "build": "tsup",
@@ -26,7 +27,35 @@
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist .turbo"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@cmsmcp/shared": "^0.3.0",
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.2.0"
+  },
+  "keywords": [
+    "mcp",
+    "wix",
+    "model-context-protocol",
+    "ai",
+    "claude",
+    "cursor",
+    "cms",
+    "ecommerce",
+    "mcp-server"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rahhuul/cms-mcp-hub",
+    "directory": "packages/wix-mcp"
+  },
+  "homepage": "https://github.com/rahhuul/cms-mcp-hub",
+  "author": "Rahul Patel <rahul.patel786@gmail.com>",
   "engines": {
     "node": ">=18.0.0"
   },

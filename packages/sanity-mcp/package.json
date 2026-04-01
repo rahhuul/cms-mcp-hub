@@ -1,7 +1,7 @@
 {
   "name": "@cmsmcp/sanity",
-  "version": "0.1.0",
-  "description": "MCP server for Sanity CMS platform",
+  "version": "0.3.0",
+  "description": "MCP server for Sanity CMS platform — GROQ queries, document CRUD, assets, datasets, and publishing",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -26,7 +26,33 @@
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist .turbo"
   },
-  "dependencies": {},
+  "keywords": [
+    "mcp",
+    "sanity",
+    "cms",
+    "groq",
+    "headless-cms",
+    "content-lake",
+    "ai-tools",
+    "model-context-protocol"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cmsmcp/cms-mcp-hub.git",
+    "directory": "packages/sanity-mcp"
+  },
+  "author": "CMS MCP Hub Contributors",
+  "dependencies": {
+    "@cmsmcp/shared": "^0.3.0",
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.2.0"
+  },
   "engines": {
     "node": ">=18.0.0"
   },

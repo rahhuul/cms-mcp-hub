@@ -1,12 +1,12 @@
 {
   "name": "@cmsmcp/yoast",
-  "version": "0.1.0",
-  "description": "MCP server for Yoast CMS platform",
+  "version": "0.3.0",
+  "description": "MCP server for Yoast SEO — 13 tools for managing SEO metadata, scores, redirects, social data, schema markup, and sitemaps via WordPress REST API",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "@cmsmcp/yoast": "./dist/index.js"
+    "cmsmcp-yoast": "./dist/index.js"
   },
   "exports": {
     ".": {
@@ -15,7 +15,8 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "scripts": {
     "build": "tsup",
@@ -26,7 +27,36 @@
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist .turbo"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@cmsmcp/shared": "^0.3.0",
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.2.0"
+  },
+  "keywords": [
+    "mcp",
+    "yoast",
+    "yoast-seo",
+    "wordpress",
+    "seo",
+    "model-context-protocol",
+    "ai",
+    "claude",
+    "cursor",
+    "mcp-server"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rahhuul/cms-mcp-hub",
+    "directory": "packages/yoast-mcp"
+  },
+  "homepage": "https://github.com/rahhuul/cms-mcp-hub",
+  "author": "Rahul Patel <rahul.patel786@gmail.com>",
   "engines": {
     "node": ">=18.0.0"
   },

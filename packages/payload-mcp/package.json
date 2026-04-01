@@ -1,7 +1,7 @@
 {
   "name": "@cmsmcp/payload",
-  "version": "0.1.0",
-  "description": "MCP server for Payload CMS platform",
+  "version": "0.3.0",
+  "description": "MCP server for Payload CMS platform — 14 tools for collections, entries, globals, media, access, and versions",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -14,9 +14,7 @@
       "import": "./dist/index.js"
     }
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -26,7 +24,33 @@
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist .turbo"
   },
-  "dependencies": {},
+  "keywords": [
+    "mcp",
+    "payload",
+    "payload-cms",
+    "cms",
+    "headless-cms",
+    "model-context-protocol",
+    "ai",
+    "llm"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cmsmcp/cms-mcp-hub",
+    "directory": "packages/payload-mcp"
+  },
+  "author": "CMS MCP Hub",
+  "dependencies": {
+    "@cmsmcp/shared": "^0.3.0",
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.2.0"
+  },
   "engines": {
     "node": ">=18.0.0"
   },
