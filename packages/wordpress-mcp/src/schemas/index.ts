@@ -265,3 +265,175 @@ export const SetupMenuSchema = z.object({
     url: z.string().optional(), object_id: z.number().optional(),
   })).describe("Menu items to add"),
 });
+
+// ═══════════════════════════════════════════════════════════════════════
+// GUTENBERG BLOCK EDITOR
+// ═══════════════════════════════════════════════════════════════════════
+
+// Block content builder
+export const BuildBlockContentSchema = z.object({
+  blocks: z.array(z.object({
+    type: z.enum(["heading","paragraph","image","list","quote","code","columns","separator","spacer","table","video","audio","cover","gallery","pullquote","preformatted","html","buttons","group"]).describe("Block type"),
+    content: z.string().optional().describe("Text content or HTML"),
+    level: z.number().min(1).max(6).optional().describe("Heading level (1-6, for heading blocks)"),
+    url: z.string().optional().describe("Media URL (for image/video/audio/cover blocks)"),
+    alt: z.string().optional().describe("Alt text (for image blocks)"),
+    caption: z.string().optional().describe("Caption (for image/video/gallery blocks)"),
+    ordered: z.boolean().optional().describe("Ordered list (for list blocks)"),
+    items: z.array(z.string()).optional().describe("List items (for list blocks)"),
+    language: z.string().optional().describe("Code language (for code blocks)"),
+    columns: z.number().optional().describe("Number of columns (for columns/gallery blocks)"),
+    align: z.enum(["left","center","right","wide","full"]).optional().describe("Block alignment"),
+    className: z.string().optional().describe("Custom CSS class"),
+  })).describe("Array of blocks to generate"),
+});
+
+export const CreateBlockPostSchema = z.object({
+  title: z.string().min(1).describe("Post title"),
+  blocks: z.array(z.object({
+    type: z.string().describe("Block type (heading, paragraph, image, list, quote, code, etc.)"),
+    content: z.string().optional(),
+    level: z.number().optional(),
+    url: z.string().optional(),
+    alt: z.string().optional(),
+    caption: z.string().optional(),
+    ordered: z.boolean().optional(),
+    items: z.array(z.string()).optional(),
+    language: z.string().optional(),
+    align: z.string().optional(),
+  })).describe("Blocks that make up the post content"),
+  status: z.enum(["publish","draft"]).default("draft"),
+  categories: z.array(z.number()).optional(),
+  tags: z.array(z.number()).optional(),
+  featured_media: z.number().optional(),
+  excerpt: z.string().optional(),
+});
+
+export const CreateLandingPageSchema = z.object({
+  title: z.string().min(1).describe("Page title"),
+  hero_heading: z.string().describe("Hero section heading"),
+  hero_text: z.string().describe("Hero section description"),
+  hero_image_url: z.string().optional().describe("Hero background image URL"),
+  hero_cta_text: z.string().optional().describe("Call-to-action button text"),
+  hero_cta_url: z.string().optional().describe("CTA button URL"),
+  features: z.array(z.object({
+    title: z.string(),
+    description: z.string(),
+  })).optional().describe("Feature cards (shown in columns)"),
+  testimonial_quote: z.string().optional(),
+  testimonial_author: z.string().optional(),
+  closing_heading: z.string().optional(),
+  closing_text: z.string().optional(),
+  status: z.enum(["publish","draft"]).default("draft"),
+});
+
+// Pattern categories
+export const ListPatternCategoriesSchema = z.object({ ...Pg });
+export const GetPatternCategorySchema = Id("Pattern category");
+export const CreatePatternCategorySchema = z.object({ name: z.string().min(1).describe("Category name"), slug: z.string().optional(), description: z.string().optional() });
+export const UpdatePatternCategorySchema = z.object({ id: z.number(), name: z.string().optional(), slug: z.string().optional(), description: z.string().optional() });
+export const DeletePatternCategorySchema = z.object({ id: z.number(), ...Force });
+
+// Block editor endpoints
+export const GetUrlDetailsSchema = z.object({ url: z.string().url().describe("URL to fetch preview details for (used for embeds)") });
+export const GetNavigationFallbackSchema = z.object({});
+export const ExportSiteSchema = z.object({});
+export const ListFontCollectionsSchema = z.object({});
+export const GetFontCollectionSchema = z.object({ slug: z.string().describe("Font collection slug") });
+export const DetectPageBuilderSchema = z.object({ post_id: z.number().describe("Post/page ID"), post_type: z.enum(["posts","pages"]).default("posts") });
+export const RenderWidgetTypeSchema = z.object({ id: z.string().describe("Widget type ID"), instance: z.record(z.string(), z.unknown()).optional().describe("Widget instance settings") });
+
+// ═══════════════════════════════════════════════════════════════════════
+// BLOCK COMPONENT LIBRARY
+// ═══════════════════════════════════════════════════════════════════════
+
+export const CreateHeroSectionSchema = z.object({
+  heading: z.string().describe("Main heading"), subheading: z.string().optional().describe("Subheading text"),
+  image_url: z.string().optional().describe("Background image URL (creates cover block)"),
+  cta_text: z.string().optional().describe("Button text"), cta_url: z.string().optional().describe("Button URL"),
+  alignment: z.enum(["left","center","right"]).default("center"),
+});
+
+export const CreateFeatureGridSchema = z.object({
+  heading: z.string().optional().describe("Section heading"),
+  columns: z.number().min(2).max(4).default(3).describe("Number of feature columns"),
+  features: z.array(z.object({
+    icon: z.string().optional().describe("Emoji or icon character"),
+    title: z.string(), description: z.string(),
+  })).min(1).describe("Feature items"),
+});
+
+export const CreatePricingTableSchema = z.object({
+  heading: z.string().optional().describe("Section heading"),
+  tiers: z.array(z.object({
+    name: z.string(), price: z.string().describe("e.g., '$29/mo' or 'Free'"),
+    description: z.string().optional(),
+    features: z.array(z.string()).describe("Included features"),
+    cta_text: z.string().optional().describe("Button text"), cta_url: z.string().optional(),
+    highlighted: z.boolean().optional().describe("Highlight this tier"),
+  })).min(1).describe("Pricing tiers"),
+});
+
+export const CreateTeamSectionSchema = z.object({
+  heading: z.string().optional().describe("Section heading"),
+  members: z.array(z.object({
+    name: z.string(), role: z.string(), bio: z.string().optional(),
+    image_url: z.string().optional().describe("Profile photo URL"),
+  })).min(1),
+});
+
+export const CreateFaqSectionSchema = z.object({
+  heading: z.string().optional().describe("Section heading"),
+  items: z.array(z.object({ question: z.string(), answer: z.string() })).min(1),
+});
+
+export const CreateCtaBannerSchema = z.object({
+  heading: z.string(), text: z.string().optional(),
+  button_text: z.string(), button_url: z.string(),
+  background_color: z.string().optional().describe("CSS color (e.g., '#1e40af')"),
+});
+
+export const CreateTestimonialsSectionSchema = z.object({
+  heading: z.string().optional(),
+  testimonials: z.array(z.object({
+    quote: z.string(), author: z.string(), role: z.string().optional(),
+    image_url: z.string().optional(),
+  })).min(1),
+});
+
+export const CreateStatsSectionSchema = z.object({
+  heading: z.string().optional(),
+  stats: z.array(z.object({
+    value: z.string().describe("e.g., '10K+', '99%', '$2M'"),
+    label: z.string().describe("e.g., 'Users', 'Uptime', 'Revenue'"),
+  })).min(1),
+});
+
+export const CreateContactSectionSchema = z.object({
+  heading: z.string().optional(),
+  text: z.string().optional().describe("Contact description"),
+  email: z.string().optional(), phone: z.string().optional(),
+  address: z.string().optional(),
+  map_embed_url: z.string().optional().describe("Google Maps embed URL"),
+});
+
+export const CreateFullPageSchema = z.object({
+  title: z.string().min(1).describe("Page title"),
+  sections: z.array(z.enum(["hero","features","pricing","team","faq","cta","testimonials","stats","contact"])).describe("Sections to include in order"),
+  hero: z.object({ heading: z.string(), subheading: z.string().optional(), image_url: z.string().optional(), cta_text: z.string().optional(), cta_url: z.string().optional() }).optional(),
+  features: z.object({ features: z.array(z.object({ icon: z.string().optional(), title: z.string(), description: z.string() })) }).optional(),
+  pricing: z.object({ tiers: z.array(z.object({ name: z.string(), price: z.string(), features: z.array(z.string()), cta_text: z.string().optional(), cta_url: z.string().optional() })) }).optional(),
+  team: z.object({ members: z.array(z.object({ name: z.string(), role: z.string(), bio: z.string().optional(), image_url: z.string().optional() })) }).optional(),
+  faq: z.object({ items: z.array(z.object({ question: z.string(), answer: z.string() })) }).optional(),
+  cta: z.object({ heading: z.string(), text: z.string().optional(), button_text: z.string(), button_url: z.string() }).optional(),
+  testimonials: z.object({ testimonials: z.array(z.object({ quote: z.string(), author: z.string(), role: z.string().optional() })) }).optional(),
+  stats: z.object({ stats: z.array(z.object({ value: z.string(), label: z.string() })) }).optional(),
+  contact: z.object({ email: z.string().optional(), phone: z.string().optional(), address: z.string().optional() }).optional(),
+  status: z.enum(["publish","draft"]).default("draft"),
+});
+
+export const SaveComponentAsPatternSchema = z.object({
+  title: z.string().min(1).describe("Reusable block/pattern name"),
+  component: z.enum(["hero","features","pricing","team","faq","cta","testimonials","stats","contact"]).describe("Component type to save"),
+  data: z.record(z.string(), z.unknown()).describe("Component data (same fields as the individual component schemas)"),
+});

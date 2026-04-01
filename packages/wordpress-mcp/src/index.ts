@@ -26,6 +26,8 @@ import { registerDirectoryTools } from "./tools/directories.js";
 import { registerFontTools } from "./tools/fonts.js";
 import { registerPluginTools } from "./tools/plugins-yoast.js";
 import { registerWorkflowTools } from "./tools/workflows.js";
+import { registerBlockEditorTools } from "./tools/block-editor.js";
+import { registerComponentTools } from "./tools/components.js";
 import { registerResources } from "./resources.js";
 import { registerPrompts } from "./prompts.js";
 import { registerWebhookTools } from "./webhook-listener.js";
@@ -66,6 +68,12 @@ async function main(): Promise<void> {
 
   // Composite workflows
   registerWorkflowTools(server, client);
+
+  // Gutenberg Block Editor
+  registerBlockEditorTools(server, client);
+
+  // Block Component Library
+  registerComponentTools(server, client);
 
   // MCP Resources (browseable data)
   registerResources(server, client);
