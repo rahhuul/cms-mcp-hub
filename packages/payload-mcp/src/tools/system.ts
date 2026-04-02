@@ -1,6 +1,7 @@
 /**
- * System tools (8): list_globals, get_global, update_global,
- * list_media, upload_media, get_access, list_versions, restore_version
+ * System tools (12): list_globals, get_global, update_global,
+ * list_media, upload_media, get_access, list_versions, restore_version,
+ * get_current_user, bulk_create, bulk_update, bulk_delete
  */
 
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -15,6 +16,10 @@ import {
   GetAccessSchema,
   ListVersionsSchema,
   RestoreVersionSchema,
+  GetCurrentUserSchema,
+  BulkCreateSchema,
+  BulkUpdateSchema,
+  BulkDeleteSchema,
 } from "../schemas/index.js";
 
 export function registerSystemTools(server: McpServer, client: PayloadClient): void {
@@ -159,6 +164,78 @@ export function registerSystemTools(server: McpServer, client: PayloadClient): v
         return mcpSuccess({ ...result, message: `Version '${versionId}' restored in '${collection}'` });
       } catch (error) {
         return mcpError(error, "payload_restore_version");
+      }
+    },
+  );
+
+  // ─── 15. payload_get_current_user ────────────────────────────────
+  server.tool(
+    "payload_get_current_user",
+    "Get the currently authenticated user's profile and permissions. Useful for verifying auth status and available roles.",
+    GetCurrentUserSchema.shape,
+    async () => {
+      try {
+        const result = await client.getCurrentUser();
+        return mcpSuccess(result);
+      } catch (error) {
+        return mcpError(error, "payload_get_current_user");
+      }
+    },
+  );
+
+  // ─── 16. payload_bulk_create ─────────────────────────────────────
+  server.tool(
+    "payload_bulk_create",
+    "Create multiple entries in a collection at once. Returns created documents and any errors encountered.",
+    BulkCreateSchema.shape,
+    async (params) => {
+      try {
+        const { collection, entries } = BulkCreateSchema.parse(params);
+        const result = await client.bulkCreate(collection, entries);
+        return mcpSuccess({
+          ...result,
+          message: `Created ${result.docs.length} entries in '${collection}' (${result.errors.length} errors)`,
+        });
+      } catch (error) {
+        return mcpError(error, "payload_bulk_create");
+      }
+    },
+  );
+
+  // ─── 17. payload_bulk_update ─────────────────────────────────────
+  server.tool(
+    "payload_bulk_update",
+    "Update multiple entries in a collection at once. Each entry must include an id and the data fields to update.",
+    BulkUpdateSchema.shape,
+    async (params) => {
+      try {
+        const { collection, entries } = BulkUpdateSchema.parse(params);
+        const result = await client.bulkUpdate(collection, entries);
+        return mcpSuccess({
+          ...result,
+          message: `Updated ${result.docs.length} entries in '${collection}' (${result.errors.length} errors)`,
+        });
+      } catch (error) {
+        return mcpError(error, "payload_bulk_update");
+      }
+    },
+  );
+
+  // ─── 18. payload_bulk_delete ─────────────────────────────────────
+  server.tool(
+    "payload_bulk_delete",
+    "Delete multiple entries from a collection at once. Provide an array of entry IDs to delete.",
+    BulkDeleteSchema.shape,
+    async (params) => {
+      try {
+        const { collection, ids } = BulkDeleteSchema.parse(params);
+        const result = await client.bulkDelete(collection, ids);
+        return mcpSuccess({
+          ...result,
+          message: `Deleted ${result.docs.length} entries from '${collection}' (${result.errors.length} errors)`,
+        });
+      } catch (error) {
+        return mcpError(error, "payload_bulk_delete");
       }
     },
   );

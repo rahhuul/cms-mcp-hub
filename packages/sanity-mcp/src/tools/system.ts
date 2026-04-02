@@ -11,6 +11,8 @@ import {
   ListDocumentTypesSchema,
   ListAssetsSchema,
   UploadImageSchema,
+  UploadFileSchema,
+  ExportDatasetSchema,
   CreateTransactionSchema,
   GetHistorySchema,
 } from "../schemas/index.js";
@@ -76,6 +78,45 @@ export function registerSystemTools(server: McpServer, client: SanityClient): vo
         return mcpSuccess(result);
       } catch (e) {
         return mcpError(e, "sanity_upload_image");
+      }
+    },
+  );
+
+  // Upload File
+  server.tool(
+    "sanity_upload_file",
+    "Upload a file asset to Sanity from a URL. Returns the asset document with _id and URL for referencing in documents. Supports any file type (PDF, CSV, etc.).",
+    UploadFileSchema.shape,
+    async (p) => {
+      try {
+        const v = UploadFileSchema.parse(p);
+        const result = await client.uploadFile(
+          (client as unknown as { dataset: string }).dataset || "production",
+          v.url,
+          v.filename,
+        );
+        if (v.label && result.document) {
+          result.document["label"] = v.label;
+        }
+        return mcpSuccess(result);
+      } catch (e) {
+        return mcpError(e, "sanity_upload_file");
+      }
+    },
+  );
+
+  // Export Dataset
+  server.tool(
+    "sanity_export_dataset",
+    "Export an entire Sanity dataset as NDJSON. Optionally filter by document types. Returns all documents, assets, and system documents.",
+    ExportDatasetSchema.shape,
+    async (p) => {
+      try {
+        const v = ExportDatasetSchema.parse(p);
+        const result = await client.exportDataset(v.dataset, v.types);
+        return mcpSuccess({ format: "ndjson", data: result });
+      } catch (e) {
+        return mcpError(e, "sanity_export_dataset");
       }
     },
   );

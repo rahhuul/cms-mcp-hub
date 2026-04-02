@@ -68,6 +68,23 @@ export const CreateRedirectSchema = z.object({
   format: z.enum(["plain", "regex"]).default("plain").describe("Match format: plain URL or regex pattern"),
 });
 
+export const UpdateRedirectSchema = z.object({
+  id: z.string().min(1).describe("Redirect ID to update"),
+  origin: z.string().optional().describe("New source URL path (e.g., /old-page)"),
+  target: z.string().optional().describe("New target URL (e.g., /new-page or https://example.com/page)"),
+  type: z.number().int().optional().describe("HTTP redirect status code (301=permanent, 302=temporary, 307, 410=gone)"),
+});
+
+export const DeleteRedirectSchema = z.object({
+  id: z.string().min(1).describe("Redirect ID to delete"),
+});
+
+export const CheckPremiumSchema = z.object({});
+
+export const ListYoastVariablesSchema = z.object({});
+
+export const GetSiteConfigSchema = z.object({});
+
 // ═══ Social (Open Graph / Twitter) ════════════════════════════════════
 
 export const GetSocialDataSchema = z.object({

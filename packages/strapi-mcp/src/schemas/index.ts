@@ -29,6 +29,7 @@ export const GetEntrySchema = z.object({
   id: z.number().describe("Entry ID"),
   populate: z.union([z.string(), z.record(z.string(), z.unknown())]).optional().describe("Relations to populate"),
   fields: z.array(z.string()).optional().describe("Specific fields to return"),
+  publicationState: z.enum(["live", "preview"]).optional().describe("'live' for published only, 'preview' to include drafts"),
   locale: z.string().optional().describe("Locale code"),
 });
 
@@ -98,4 +99,26 @@ export const CreateLocalizedEntrySchema = z.object({
   id: z.number().describe("Source entry ID to create localization for"),
   locale: z.string().min(1).describe("Target locale code (e.g., 'fr', 'de', 'es')"),
   data: z.record(z.string(), z.unknown()).describe("Localized field data"),
+});
+
+export const ListLocalizationsSchema = z.object({
+  contentType: z.string().min(1).describe("Content type API name"),
+  id: z.number().describe("Entry ID to list localizations for"),
+});
+
+export const UpdateLocalizationSchema = z.object({
+  contentType: z.string().min(1).describe("Content type API name"),
+  id: z.number().describe("Entry ID"),
+  locale: z.string().min(1).describe("Locale code to update (e.g., 'fr', 'de')"),
+  data: z.record(z.string(), z.unknown()).describe("Updated localized field data"),
+});
+
+export const DeleteLocalizationSchema = z.object({
+  contentType: z.string().min(1).describe("Content type API name"),
+  id: z.number().describe("Entry ID"),
+  locale: z.string().min(1).describe("Locale code to delete (e.g., 'fr', 'de')"),
+});
+
+export const GetContentTypeSchema = z.object({
+  uid: z.string().min(1).describe("Content type UID (e.g., 'api::article.article'). Use strapi_list_content_types to discover UIDs."),
 });

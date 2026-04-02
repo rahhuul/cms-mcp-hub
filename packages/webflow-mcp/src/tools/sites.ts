@@ -8,12 +8,13 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { mcpError, mcpSuccess } from "@cmsmcp/shared";
 import type { WebflowClient } from "../api/client.js";
-import type { WebflowSite, WebflowCollection, WebflowItem } from "../types/index.js";
+import type { WebflowSite, WebflowCollection, WebflowCollectionField, WebflowItem } from "../types/index.js";
 import {
   ListSitesSchema,
   GetSiteSchema,
   ListCollectionsSchema,
   GetCollectionSchema,
+  ListCollectionFieldsSchema,
   ListItemsSchema,
   GetItemSchema,
   CreateItemSchema,
@@ -82,6 +83,24 @@ export function registerSiteTools(server: McpServer, client: WebflowClient): voi
         return mcpSuccess(result);
       } catch (error) {
         return mcpError(error, "webflow_get_collection");
+      }
+    },
+  );
+
+  // ─── 4b. webflow_list_collection_fields ──────────────────────────
+  server.tool(
+    "webflow_list_collection_fields",
+    "List all fields defined on a Webflow CMS collection. Returns field IDs, display names, slugs, types, and required/editable flags.",
+    ListCollectionFieldsSchema.shape,
+    async (params) => {
+      try {
+        const { collectionId } = ListCollectionFieldsSchema.parse(params);
+        const result = await client.get<{ fields: WebflowCollectionField[] }>(
+          `collections/${collectionId}/fields`,
+        );
+        return mcpSuccess(result);
+      } catch (error) {
+        return mcpError(error, "webflow_list_collection_fields");
       }
     },
   );

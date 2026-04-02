@@ -1,6 +1,6 @@
 /**
- * Content tools (6): list_collections, list_entries, get_entry, create_entry,
- * update_entry, delete_entry
+ * Content tools (9): list_collections, list_entries, get_entry, create_entry,
+ * update_entry, delete_entry, get_version, publish_entry, unpublish_entry
  */
 
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -13,6 +13,9 @@ import {
   CreateEntrySchema,
   UpdateEntrySchema,
   DeleteEntrySchema,
+  GetVersionSchema,
+  PublishEntrySchema,
+  UnpublishEntrySchema,
 } from "../schemas/index.js";
 
 export function registerContentTools(server: McpServer, client: PayloadClient): void {
@@ -132,6 +135,54 @@ export function registerContentTools(server: McpServer, client: PayloadClient): 
         return mcpSuccess({ ...result, message: `Entry ${id} deleted from '${collection}'` });
       } catch (error) {
         return mcpError(error, "payload_delete_entry");
+      }
+    },
+  );
+
+  // ─── 7. payload_get_version ──────────────────────────────────────
+  server.tool(
+    "payload_get_version",
+    "Get a specific version of an entry by version ID. Use payload_list_versions to discover version IDs first.",
+    GetVersionSchema.shape,
+    async (params) => {
+      try {
+        const { collection, version_id } = GetVersionSchema.parse(params);
+        const result = await client.getVersion(collection, version_id);
+        return mcpSuccess(result);
+      } catch (error) {
+        return mcpError(error, "payload_get_version");
+      }
+    },
+  );
+
+  // ─── 8. payload_publish_entry ────────────────────────────────────
+  server.tool(
+    "payload_publish_entry",
+    "Publish a draft entry by setting its _status to 'published'. The collection must have drafts enabled.",
+    PublishEntrySchema.shape,
+    async (params) => {
+      try {
+        const { collection, id } = PublishEntrySchema.parse(params);
+        const result = await client.publishEntry(collection, id);
+        return mcpSuccess({ ...result, message: `Entry ${id} published in '${collection}'` });
+      } catch (error) {
+        return mcpError(error, "payload_publish_entry");
+      }
+    },
+  );
+
+  // ─── 9. payload_unpublish_entry ──────────────────────────────────
+  server.tool(
+    "payload_unpublish_entry",
+    "Unpublish an entry by reverting its _status to 'draft'. The collection must have drafts enabled.",
+    UnpublishEntrySchema.shape,
+    async (params) => {
+      try {
+        const { collection, id } = UnpublishEntrySchema.parse(params);
+        const result = await client.unpublishEntry(collection, id);
+        return mcpSuccess({ ...result, message: `Entry ${id} unpublished in '${collection}'` });
+      } catch (error) {
+        return mcpError(error, "payload_unpublish_entry");
       }
     },
   );

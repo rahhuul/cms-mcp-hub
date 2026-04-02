@@ -1,13 +1,16 @@
 /**
  * @cmsmcp/payload — MCP server for Payload CMS
  *
- * Provides 14 tools for managing Payload CMS content:
+ * Provides 21 tools for managing Payload CMS content:
  * - Collection discovery (1 tool)
  * - Entry CRUD with filtering & depth population (5 tools)
+ * - Version get, publish, unpublish (3 tools)
  * - Globals management (3 tools)
  * - Media listing & upload (2 tools)
  * - Access permissions (1 tool)
+ * - Current user (1 tool)
  * - Version history & restore (2 tools)
+ * - Bulk operations: create, update, delete (3 tools)
  */
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";

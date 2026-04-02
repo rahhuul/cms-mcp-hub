@@ -9,6 +9,10 @@ import type { YoastSeoMeta } from "../types/index.js";
 import {
   ListRedirectsSchema,
   CreateRedirectSchema,
+  UpdateRedirectSchema,
+  DeleteRedirectSchema,
+  CheckPremiumSchema,
+  ListYoastVariablesSchema,
   GetSchemaSchema,
   GetSitemapIndexSchema,
   BulkGetSeoSchema,
@@ -127,6 +131,78 @@ export function registerSystemTools(server: McpServer, client: YoastClient): voi
         return mcpSuccess(redirect);
       } catch (e) {
         return mcpError(e, "yoast_create_redirect");
+      }
+    },
+  );
+
+  // ── Update Redirect ──────────────────────────────────────────────
+  server.tool(
+    "yoast_update_redirect",
+    "Update an existing URL redirect in Yoast SEO Premium. Change origin, target, or redirect type.",
+    UpdateRedirectSchema.shape,
+    async (params) => {
+      try {
+        const { id, origin, target, type } = UpdateRedirectSchema.parse(params);
+        const data: Record<string, unknown> = {};
+        if (origin !== undefined) data.origin = origin;
+        if (target !== undefined) data.target = target;
+        if (type !== undefined) data.type = type;
+        const redirect = await client.updateRedirect(id, data as { origin?: string; target?: string; type?: number });
+        return mcpSuccess(redirect);
+      } catch (e) {
+        return mcpError(e, "yoast_update_redirect");
+      }
+    },
+  );
+
+  // ── Delete Redirect ─────────────────────────────────────────────
+  server.tool(
+    "yoast_delete_redirect",
+    "Delete a URL redirect from Yoast SEO Premium by its ID.",
+    DeleteRedirectSchema.shape,
+    async (params) => {
+      try {
+        const { id } = DeleteRedirectSchema.parse(params);
+        await client.deleteRedirect(id);
+        return mcpSuccess({ deleted: true, id });
+      } catch (e) {
+        return mcpError(e, "yoast_delete_redirect");
+      }
+    },
+  );
+
+  // ── Check Premium ───────────────────────────────────────────────
+  server.tool(
+    "yoast_check_premium",
+    "Check whether Yoast SEO Premium is active on the WordPress site by probing the redirects endpoint.",
+    CheckPremiumSchema.shape,
+    async () => {
+      try {
+        await client.listRedirects();
+        return mcpSuccess({ premium: true });
+      } catch (e) {
+        const message = e instanceof Error ? e.message : String(e);
+        if (message.includes("404") || message.includes("Not Found") || message.includes("rest_no_route")) {
+          return mcpSuccess({ premium: false, reason: "Yoast SEO Premium redirects endpoint not available" });
+        }
+        return mcpError(e, "yoast_check_premium");
+      }
+    },
+  );
+
+  // ── List Yoast Variables ────────────────────────────────────────
+  server.tool(
+    "yoast_list_variables",
+    "List all available Yoast SEO template variables with descriptions. These can be used in SEO title and meta description templates.",
+    ListYoastVariablesSchema.shape,
+    async () => {
+      try {
+        return mcpSuccess({
+          variables: YOAST_TEMPLATE_VARIABLES,
+          usage: "Use these variables in SEO title and meta description fields. Example: %%title%% %%sep%% %%sitename%%",
+        });
+      } catch (e) {
+        return mcpError(e, "yoast_list_variables");
       }
     },
   );

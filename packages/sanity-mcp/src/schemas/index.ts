@@ -46,6 +46,29 @@ export const UploadImageSchema = z.object({
   filename: z.string().optional().describe("Optional filename for the uploaded image"),
 });
 
+export const UploadFileSchema = z.object({
+  url: z.string().url().describe("URL of the file to upload to Sanity"),
+  filename: z.string().describe("Filename for the uploaded file (e.g., 'report.pdf')"),
+  label: z.string().optional().describe("Optional human-readable label for the file asset"),
+});
+
+export const ExportDatasetSchema = z.object({
+  dataset: z.string().min(1).default("production").describe("Dataset name to export (e.g., 'production')"),
+  types: z.array(z.string()).optional().describe("Optional array of document types to include in export"),
+});
+
+export const IncrementFieldSchema = z.object({
+  document_id: z.string().min(1).describe("Document ID to patch"),
+  field_path: z.string().min(1).describe("Field path to increment (e.g., 'viewCount', 'stats.likes')"),
+  amount: z.number().default(1).describe("Amount to increment by (default: 1)"),
+});
+
+export const DecrementFieldSchema = z.object({
+  document_id: z.string().min(1).describe("Document ID to patch"),
+  field_path: z.string().min(1).describe("Field path to decrement (e.g., 'stock', 'stats.dislikes')"),
+  amount: z.number().default(1).describe("Amount to decrement by (default: 1)"),
+});
+
 // ═══ Transactions ═════════════════════════════════════════════════════════
 export const CreateTransactionSchema = z.object({
   mutations: z.array(z.record(z.string(), z.unknown())).min(1).describe("Array of mutation objects (create, createOrReplace, createIfNotExists, delete, patch)"),

@@ -1,5 +1,5 @@
 /**
- * Content tools (10): content types (3), entries (7)
+ * Content tools (13): content types (6), entries (7)
  */
 
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -14,6 +14,9 @@ import {
   ListContentTypesSchema,
   GetContentTypeSchema,
   CreateContentTypeSchema,
+  UpdateContentTypeSchema,
+  DeleteContentTypeSchema,
+  PublishContentTypeSchema,
   ListEntriesSchema,
   GetEntrySchema,
   CreateEntrySchema,
@@ -96,7 +99,75 @@ export function registerContentTools(server: McpServer, client: ContentfulClient
     },
   );
 
-  // ─── 4. contentful_list_entries ───────────────────────────────────
+  // ─── 4. contentful_update_content_type ─────────────────────────────
+  server.tool(
+    "contentful_update_content_type",
+    "Update an existing content type's fields and configuration. Requires the current version for optimistic locking. All fields must be provided (replaces the entire field set).",
+    UpdateContentTypeSchema.shape,
+    async (params) => {
+      try {
+        const { contentTypeId, version, ...body } = UpdateContentTypeSchema.parse(params);
+
+        const result = await client.putWithVersion<ContentfulContentType>(
+          `content_types/${contentTypeId}`,
+          version,
+          body,
+        );
+
+        return mcpSuccess({
+          id: result.sys.id,
+          name: result.name,
+          version: result.sys.version,
+          fieldsCount: result.fields.length,
+          message: `Content type '${result.name}' updated (version ${result.sys.version}). Publish to activate changes.`,
+        });
+      } catch (error) {
+        return mcpError(error, "contentful_update_content_type");
+      }
+    },
+  );
+
+  // ─── 5. contentful_delete_content_type ────────────────────────────
+  server.tool(
+    "contentful_delete_content_type",
+    "Permanently delete a content type. The content type must be unpublished (deactivated) and have no entries. Requires the current version.",
+    DeleteContentTypeSchema.shape,
+    async (params) => {
+      try {
+        const { contentTypeId, version } = DeleteContentTypeSchema.parse(params);
+        await client.deleteWithVersion(`content_types/${contentTypeId}`, version);
+        return mcpSuccess({ message: `Content type '${contentTypeId}' deleted` });
+      } catch (error) {
+        return mcpError(error, "contentful_delete_content_type");
+      }
+    },
+  );
+
+  // ─── 6. contentful_publish_content_type ───────────────────────────
+  server.tool(
+    "contentful_publish_content_type",
+    "Publish (activate) a content type to make it available for creating entries. Requires the current version for optimistic locking.",
+    PublishContentTypeSchema.shape,
+    async (params) => {
+      try {
+        const { contentTypeId, version } = PublishContentTypeSchema.parse(params);
+        const result = await client.putWithVersion<ContentfulContentType>(
+          `content_types/${contentTypeId}/published`,
+          version,
+        );
+        return mcpSuccess({
+          id: result.sys.id,
+          name: result.name,
+          version: result.sys.version,
+          message: `Content type '${result.name}' published (activated)`,
+        });
+      } catch (error) {
+        return mcpError(error, "contentful_publish_content_type");
+      }
+    },
+  );
+
+  // ─── 7. contentful_list_entries ───────────────────────────────────
   server.tool(
     "contentful_list_entries",
     "List entries with filtering by content type, full-text search, field selection, and pagination. Use content_type parameter to filter by type.",

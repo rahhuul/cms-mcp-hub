@@ -79,6 +79,16 @@ export class YoastClient {
     return this.api.post<YoastRedirect>("yoast/v1/redirects", data);
   }
 
+  /** Update a redirect (requires Yoast Premium) */
+  async updateRedirect(id: string, data: { origin?: string; target?: string; type?: number }): Promise<YoastRedirect> {
+    return this.api.put<YoastRedirect>(`yoast/v1/redirects/${id}`, data);
+  }
+
+  /** Delete a redirect (requires Yoast Premium) */
+  async deleteRedirect(id: string): Promise<Record<string, unknown>> {
+    return this.api.delete<Record<string, unknown>>(`yoast/v1/redirects/${id}`);
+  }
+
   // ── Sitemap ──────────────────────────────────────────────────────
 
   /** Fetch sitemap index XML and return as text */

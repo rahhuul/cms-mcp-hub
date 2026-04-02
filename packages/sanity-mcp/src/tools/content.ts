@@ -12,6 +12,8 @@ import {
   UpdateDocumentSchema,
   DeleteDocumentSchema,
   PublishDraftSchema,
+  IncrementFieldSchema,
+  DecrementFieldSchema,
 } from "../schemas/index.js";
 
 export function registerContentTools(server: McpServer, client: SanityClient): void {
@@ -151,6 +153,44 @@ export function registerContentTools(server: McpServer, client: SanityClient): v
         return mcpSuccess(result);
       } catch (e) {
         return mcpError(e, "sanity_publish_draft");
+      }
+    },
+  );
+
+  // Increment Field
+  server.tool(
+    "sanity_increment_field",
+    "Atomically increment a numeric field on a document. Uses Sanity's 'inc' patch operation for safe concurrent updates (e.g., view counts, likes).",
+    IncrementFieldSchema.shape,
+    async (p) => {
+      try {
+        const v = IncrementFieldSchema.parse(p);
+        const result = await client.mutate(
+          [{ patch: { id: v.document_id, inc: { [v.field_path]: v.amount } } }],
+          { returnIds: true, returnDocuments: true },
+        );
+        return mcpSuccess(result);
+      } catch (e) {
+        return mcpError(e, "sanity_increment_field");
+      }
+    },
+  );
+
+  // Decrement Field
+  server.tool(
+    "sanity_decrement_field",
+    "Atomically decrement a numeric field on a document. Uses Sanity's 'dec' patch operation for safe concurrent updates (e.g., stock levels, quotas).",
+    DecrementFieldSchema.shape,
+    async (p) => {
+      try {
+        const v = DecrementFieldSchema.parse(p);
+        const result = await client.mutate(
+          [{ patch: { id: v.document_id, dec: { [v.field_path]: v.amount } } }],
+          { returnIds: true, returnDocuments: true },
+        );
+        return mcpSuccess(result);
+      } catch (e) {
+        return mcpError(e, "sanity_decrement_field");
       }
     },
   );

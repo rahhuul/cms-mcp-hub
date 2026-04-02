@@ -148,8 +148,60 @@ export const ListDomainsSchema = z.object({
   siteId: z.string().describe("Webflow Site ID"),
 });
 
+// ─── Collection Fields ───────────────────────────────────────────────
+
+export const ListCollectionFieldsSchema = z.object({
+  collectionId: z.string().describe("Collection ID"),
+});
+
+// ─── Products (E-commerce) — additional ──────────────────────────────
+
+export const GetProductSchema = z.object({
+  siteId: z.string().describe("Webflow Site ID"),
+  productId: z.string().describe("Product ID"),
+});
+
+export const UpdateProductSchema = z.object({
+  siteId: z.string().describe("Webflow Site ID"),
+  productId: z.string().describe("Product ID to update"),
+  product: z.object({
+    fieldData: z.record(z.unknown()).describe("Updated product field data (name, slug, description, etc.)"),
+  }).optional().describe("Product data to update"),
+  sku: z.object({
+    fieldData: z.record(z.unknown()).describe("Updated SKU field data"),
+  }).optional().describe("Default SKU data to update"),
+});
+
+export const DeleteProductSchema = z.object({
+  siteId: z.string().describe("Webflow Site ID"),
+  productId: z.string().describe("Product ID to delete"),
+});
+
+// ─── Orders (E-commerce) — additional ────────────────────────────────
+
+export const UpdateOrderSchema = z.object({
+  siteId: z.string().describe("Webflow Site ID"),
+  orderId: z.string().describe("Order ID to update"),
+  status: z.enum(["pending", "unfulfilled", "fulfilled", "disputed", "dispute-lost", "refunded"]).optional().describe("New order status"),
+  comment: z.string().optional().describe("Internal comment/note for the order"),
+});
+
 // ─── Webhooks ─────────────────────────────────────────────────────────
 
 export const ListWebhooksSchema = z.object({
   siteId: z.string().describe("Webflow Site ID"),
+});
+
+export const CreateWebhookSchema = z.object({
+  siteId: z.string().describe("Webflow Site ID"),
+  triggerType: z.string().describe("Webhook trigger type (e.g., 'form_submission', 'site_publish', 'collection_item_created')"),
+  url: z.string().url().describe("Webhook endpoint URL to receive POST requests"),
+});
+
+export const GetWebhookSchema = z.object({
+  webhookId: z.string().describe("Webhook ID"),
+});
+
+export const DeleteWebhookSchema = z.object({
+  webhookId: z.string().describe("Webhook ID to delete"),
 });

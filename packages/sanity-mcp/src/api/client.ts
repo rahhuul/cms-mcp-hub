@@ -180,6 +180,73 @@ export class SanityClient {
   }
 
   /**
+   * Upload a file asset.
+   * POST /assets/files/{dataset}
+   * Requires raw body with Content-Type header matching the file type.
+   */
+  async uploadFile(
+    fileUrl: string,
+    filename: string,
+  ): Promise<{ document: Record<string, unknown> }> {
+    const fileResponse = await fetch(fileUrl);
+    if (!fileResponse.ok) {
+      throw new Error(`Failed to fetch file from ${fileUrl}: ${fileResponse.statusText}`);
+    }
+    const contentType = fileResponse.headers.get("content-type") || "application/octet-stream";
+    const fileBuffer = await fileResponse.arrayBuffer();
+
+    const url = new URL(
+      `https://${this.projectId}.api.sanity.io/v2024-01/assets/files/${this.dataset}`,
+    );
+    url.searchParams.set("filename", filename);
+
+    const response = await fetch(url.toString(), {
+      method: "POST",
+      headers: {
+        "Content-Type": contentType,
+        Authorization: `Bearer ${this.token}`,
+      },
+      body: fileBuffer,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => "");
+      throw new Error(`File upload failed (${response.status}): ${errorText || response.statusText}`);
+    }
+
+    return response.json() as Promise<{ document: Record<string, unknown> }>;
+  }
+
+  /**
+   * Export an entire dataset as NDJSON.
+   * GET /data/export/{dataset}
+   */
+  async exportDataset(
+    dataset: string,
+    types?: string[],
+  ): Promise<string> {
+    const url = new URL(
+      `https://${this.projectId}.api.sanity.io/v2024-01/data/export/${dataset}`,
+    );
+    if (types && types.length > 0) {
+      url.searchParams.set("types", types.join(","));
+    }
+
+    const response = await fetch(url.toString(), {
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => "");
+      throw new Error(`Dataset export failed (${response.status}): ${errorText || response.statusText}`);
+    }
+
+    return response.text();
+  }
+
+  /**
    * Get document history (transactions).
    * GET /data/history/{dataset}/transactions/{documentId}
    */

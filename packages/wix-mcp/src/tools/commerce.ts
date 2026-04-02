@@ -3,14 +3,26 @@ import { mcpError, mcpSuccess } from "@cmsmcp/shared";
 import type { WixClient } from "../api/client.js";
 import {
   ListContactsSchema,
+  GetContactSchema,
   CreateContactSchema,
+  UpdateContactSchema,
+  DeleteContactSchema,
   ListProductsSchema,
   GetProductSchema,
+  CreateProductSchema,
+  UpdateProductSchema,
+  DeleteProductSchema,
   ListOrdersSchema,
   GetOrderSchema,
+  UpdateOrderSchema,
   ListBlogPostsSchema,
+  GetBlogPostSchema,
   CreateBlogPostSchema,
+  UpdateBlogPostSchema,
+  DeleteBlogPostSchema,
   ListBookingServicesSchema,
+  GetBookingServiceSchema,
+  ListBookingsSchema,
   GetSitePropertiesSchema,
 } from "../schemas/index.js";
 
@@ -40,6 +52,22 @@ export function registerCommerceTools(server: McpServer, client: WixClient): voi
   );
 
   server.tool(
+    "wix_get_contact",
+    "Get a specific Wix contact by ID with full details including name, emails, phones, and metadata.",
+    GetContactSchema.shape,
+    async (p) => {
+      try {
+        const v = GetContactSchema.parse(p);
+        return mcpSuccess(
+          await client.get(`/contacts/v4/contacts/${v.contactId}`),
+        );
+      } catch (e) {
+        return mcpError(e, "wix_get_contact");
+      }
+    },
+  );
+
+  server.tool(
     "wix_create_contact",
     "Create a new Wix contact with name, email, phone, company, and job title.",
     CreateContactSchema.shape,
@@ -51,6 +79,39 @@ export function registerCommerceTools(server: McpServer, client: WixClient): voi
         );
       } catch (e) {
         return mcpError(e, "wix_create_contact");
+      }
+    },
+  );
+
+  server.tool(
+    "wix_update_contact",
+    "Update an existing Wix contact's name, emails, phones, company, or job title.",
+    UpdateContactSchema.shape,
+    async (p) => {
+      try {
+        const v = UpdateContactSchema.parse(p);
+        const { contactId, ...body } = v;
+        return mcpSuccess(
+          await client.patch(`/contacts/v4/contacts/${contactId}`, body),
+        );
+      } catch (e) {
+        return mcpError(e, "wix_update_contact");
+      }
+    },
+  );
+
+  server.tool(
+    "wix_delete_contact",
+    "Delete a Wix contact by ID. This action is irreversible.",
+    DeleteContactSchema.shape,
+    async (p) => {
+      try {
+        const v = DeleteContactSchema.parse(p);
+        return mcpSuccess(
+          await client.del(`/contacts/v4/contacts/${v.contactId}`),
+        );
+      } catch (e) {
+        return mcpError(e, "wix_delete_contact");
       }
     },
   );

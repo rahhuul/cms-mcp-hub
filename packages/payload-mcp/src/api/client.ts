@@ -234,7 +234,107 @@ export class PayloadClient {
     slug: string,
     data: Record<string, unknown>,
   ): Promise<{ doc: PayloadEntry; message: string }> {
-    return this.authPost<{ doc: PayloadEntry; message: string }>(`globals/${slug}`, data);
+    return this.authPatch<{ doc: PayloadEntry; message: string }>(`globals/${slug}`, data);
+  }
+
+  // ─── Versions (single) ──────────────────────────────────────────
+
+  async getVersion(
+    collection: string,
+    versionId: string,
+  ): Promise<PayloadEntry> {
+    return this.authGet<PayloadEntry>(`${collection}/versions/${versionId}`);
+  }
+
+  // ─── Publishing ────────────────────────────────────────────────
+
+  async publishEntry(
+    collection: string,
+    id: string | number,
+  ): Promise<{ doc: PayloadEntry; message: string }> {
+    return this.authPatch<{ doc: PayloadEntry; message: string }>(
+      `${collection}/${id}`,
+      { _status: "published" },
+    );
+  }
+
+  async unpublishEntry(
+    collection: string,
+    id: string | number,
+  ): Promise<{ doc: PayloadEntry; message: string }> {
+    return this.authPatch<{ doc: PayloadEntry; message: string }>(
+      `${collection}/${id}`,
+      { _status: "draft" },
+    );
+  }
+
+  // ─── Current User ──────────────────────────────────────────────
+
+  async getCurrentUser(): Promise<unknown> {
+    return this.authGet<unknown>("users/me");
+  }
+
+  // ─── Bulk Operations ──────────────────────────────────────────
+
+  async bulkCreate(
+    collection: string,
+    entries: Record<string, unknown>[],
+  ): Promise<{ docs: PayloadEntry[]; errors: unknown[] }> {
+    // Payload bulk create: POST each entry individually and collect results
+    const docs: PayloadEntry[] = [];
+    const errors: unknown[] = [];
+    for (const entry of entries) {
+      try {
+        const result = await this.createEntry(collection, entry);
+        docs.push(result.doc);
+      } catch (error) {
+        errors.push({
+          data: entry,
+          error: error instanceof Error ? error.message : String(error),
+        });
+      }
+    }
+    return { docs, errors };
+  }
+
+  async bulkUpdate(
+    collection: string,
+    entries: Array<{ id: string | number; data: Record<string, unknown> }>,
+  ): Promise<{ docs: PayloadEntry[]; errors: unknown[] }> {
+    const docs: PayloadEntry[] = [];
+    const errors: unknown[] = [];
+    for (const entry of entries) {
+      try {
+        const result = await this.updateEntry(collection, entry.id, entry.data);
+        docs.push(result.doc);
+      } catch (error) {
+        errors.push({
+          id: entry.id,
+          error: error instanceof Error ? error.message : String(error),
+        });
+      }
+    }
+    return { docs, errors };
+  }
+
+  async bulkDelete(
+    collection: string,
+    ids: Array<string | number>,
+  ): Promise<{ docs: PayloadEntry[]; errors: unknown[] }> {
+    const docs: PayloadEntry[] = [];
+    const errors: unknown[] = [];
+    for (const id of ids) {
+      try {
+        const result = await this.deleteEntry(collection, id);
+        docs.push(result.doc);
+      } catch (error) {
+        errors.push({
+          id,
+          error: error instanceof Error ? error.message : String(error),
+        });
+      }
+    }
+    return { docs, errors };
   }
 
   // ─── Media ──────────────────────────────────────────────────────

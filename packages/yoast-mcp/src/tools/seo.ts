@@ -14,6 +14,7 @@ import {
   UpdateIndexableSchema,
   GetSocialDataSchema,
   UpdateSocialDataSchema,
+  GetSiteConfigSchema,
 } from "../schemas/index.js";
 
 /** Map post_type enum value to WP REST plural form */
@@ -22,6 +23,21 @@ function pluralize(postType: string): string {
 }
 
 export function registerSeoTools(server: McpServer, client: YoastClient): void {
+
+  // ── Get Site Config ─────────────────────────────────────────────
+  server.tool(
+    "yoast_get_site_config",
+    "Get Yoast SEO site-wide configuration. Returns business name, logo, social profiles, organization schema settings, and site representation type.",
+    GetSiteConfigSchema.shape,
+    async () => {
+      try {
+        const config = await client.getSiteRepresentation();
+        return mcpSuccess(config);
+      } catch (e) {
+        return mcpError(e, "yoast_get_site_config");
+      }
+    },
+  );
 
   // ── Get SEO Data ─────────────────────────────────────────────────
   server.tool(

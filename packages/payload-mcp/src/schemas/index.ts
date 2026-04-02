@@ -87,3 +87,40 @@ export const RestoreVersionSchema = z.object({
   collection: z.string().min(1).describe("Collection slug"),
   versionId: z.string().min(1).describe("Version ID to restore"),
 });
+
+export const GetVersionSchema = z.object({
+  collection: z.string().min(1).describe("Collection slug"),
+  version_id: z.string().min(1).describe("Version ID to retrieve"),
+});
+
+export const PublishEntrySchema = z.object({
+  collection: z.string().min(1).describe("Collection slug (must have drafts enabled)"),
+  id: z.union([z.string(), z.number()]).describe("Entry ID to publish"),
+});
+
+export const UnpublishEntrySchema = z.object({
+  collection: z.string().min(1).describe("Collection slug (must have drafts enabled)"),
+  id: z.union([z.string(), z.number()]).describe("Entry ID to unpublish (revert to draft)"),
+});
+
+// ─── System ─────────────────────────────────────────────────────────
+
+export const GetCurrentUserSchema = z.object({});
+
+export const BulkCreateSchema = z.object({
+  collection: z.string().min(1).describe("Collection slug"),
+  entries: z.array(z.record(z.string(), z.unknown())).min(1).describe("Array of entry data objects to create"),
+});
+
+export const BulkUpdateSchema = z.object({
+  collection: z.string().min(1).describe("Collection slug"),
+  entries: z.array(z.object({
+    id: z.union([z.string(), z.number()]).describe("Entry ID to update"),
+    data: z.record(z.string(), z.unknown()).describe("Fields to update"),
+  })).min(1).describe("Array of entries with id and data to update"),
+});
+
+export const BulkDeleteSchema = z.object({
+  collection: z.string().min(1).describe("Collection slug"),
+  ids: z.array(z.union([z.string(), z.number()])).min(1).describe("Array of entry IDs to delete"),
+});

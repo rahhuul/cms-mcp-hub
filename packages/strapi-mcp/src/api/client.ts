@@ -16,14 +16,18 @@ import type {
 export class StrapiClient {
   private readonly api: ApiClient;
   private readonly logger: Logger;
+  private readonly apiBaseUrl: string;
+  private readonly authHeader: string;
   private contentTypesCache: StrapiContentType[] | null = null;
 
   constructor(config: StrapiConfig) {
     this.logger = createLogger("strapi");
+    this.apiBaseUrl = `${config.url.replace(/\/+$/, "")}/api`;
+    this.authHeader = `Bearer ${config.apiToken}`;
     this.api = new ApiClient(
       {
-        baseUrl: `${config.url.replace(/\/+$/, "")}/api`,
-        headers: { Authorization: `Bearer ${config.apiToken}` },
+        baseUrl: this.apiBaseUrl,
+        headers: { Authorization: this.authHeader },
         maxRetries: 3,
         rateLimitPerSecond: 10,
         timeoutMs: 30_000,
@@ -166,6 +170,134 @@ export class StrapiClient {
 
   async listRoles(): Promise<unknown> {
     return this.api.get<unknown>("users-permissions/roles");
+  }
+
+  // ─── Content Type Detail ──────────────────────────────────────
+
+  async getContentType(uid: string): Promise<StrapiContentType> {
+    const result = await this.api.get<{ data: StrapiContentType }>(
+      `content-type-builder/content-types/${uid}`,
+    );
+    return result.data;
+  }
+
+  // ─── Localization (extended) ─────────────────────────────────
+
+  async listLocalizations(
+    contentType: string,
+    id: number,
+  ): Promise<unknown[]> {
+    const plural = await this.resolvePluralName(contentType);
+    const entry = await this.api.get<StrapiSingleResponse>(`${plural}/${id}`, {
+      populate: "localizations",
+    });
+    const localizations = (entry.data as Record<string, unknown>)["localizations"];
+    return Array.isArray(localizations) ? localizations :
+      (localizations as Record<string, unknown>)?.["data"] as unknown[] ?? [];
+  }
+
+  async updateLocalization(
+    contentType: string,
+    id: number,
+    locale: string,
+    data: Record<string, unknown>,
+  ): Promise<StrapiSingleResponse> {
+    // Fetch the entry's localizations to find the localized entry ID
+    const localizations = await this.listLocalizations(contentType, id);
+    const localized = (localizations as Array<Record<string, unknown>>).find(
+      (l) => l["locale"] === locale || (l["attributes"] as Record<string, unknown>)?.["locale"] === locale,
+    );
+    if (!localized) {
+      throw new Error(`No localization found for locale '${locale}' on entry ${id}. Create it first with strapi_create_localized_entry.`);
+    }
+    const localizedId = (localized["id"] as number);
+    const plural = await this.resolvePluralName(contentType);
+    return this.api.put<StrapiSingleResponse>(`${plural}/${localizedId}`, { data });
+  }
+
+  async deleteLocalization(
+    contentType: string,
+    id: number,
+    locale: string,
+  ): Promise<StrapiSingleResponse> {
+    const localizations = await this.listLocalizations(contentType, id);
+    const localized = (localizations as Array<Record<string, unknown>>).find(
+      (l) => l["locale"] === locale || (l["attributes"] as Record<string, unknown>)?.["locale"] === locale,
+    );
+    if (!localized) {
+      throw new Error(`No localization found for locale '${locale}' on entry ${id}.`);
+    }
+    const localizedId = (localized["id"] as number);
+    const plural = await this.resolvePluralName(contentType);
+    return this.api.delete<StrapiSingleResponse>(`${plural}/${localizedId}`);
+  }
+
+  // ─── File Upload ────────────────────────────────────────────
+
+  async uploadFile(
+    fileUrl: string,
+    options: { name?: string; caption?: string; alternativeText?: string } = {},
+  ): Promise<StrapiMediaFile> {
+    // 1. Fetch file from URL
+    this.logger.info("Fetching file from URL for upload", { url: fileUrl });
+    const fileResponse = await fetch(fileUrl, { signal: AbortSignal.timeout(60_000) });
+    if (!fileResponse.ok) {
+      throw new Error(`Failed to fetch file from URL: ${fileResponse.status} ${fileResponse.statusText}`);
+    }
+
+    const buffer = Buffer.from(await fileResponse.arrayBuffer());
+    const contentType = fileResponse.headers.get("content-type") ?? "application/octet-stream";
+
+    // Derive filename from URL or override
+    const urlPath = new URL(fileUrl).pathname;
+    const fileName = options.name ?? urlPath.split("/").pop() ?? "upload";
+
+    // 2. Build multipart form data manually (no external deps)
+    const boundary = `----CMSMCPBoundary${Date.now()}${Math.random().toString(36).slice(2)}`;
+    const parts: Buffer[] = [];
+
+    // File part
+    parts.push(Buffer.from(
+      `--${boundary}\r\nContent-Disposition: form-data; name="files"; filename="${fileName}"\r\nContent-Type: ${contentType}\r\n\r\n`,
+    ));
+    parts.push(buffer);
+    parts.push(Buffer.from("\r\n"));
+
+    // Optional metadata fields
+    if (options.caption) {
+      parts.push(Buffer.from(
+        `--${boundary}\r\nContent-Disposition: form-data; name="fileInfo"\r\nContent-Type: application/json\r\n\r\n${JSON.stringify({ caption: options.caption, alternativeText: options.alternativeText ?? "" })}\r\n`,
+      ));
+    } else if (options.alternativeText) {
+      parts.push(Buffer.from(
+        `--${boundary}\r\nContent-Disposition: form-data; name="fileInfo"\r\nContent-Type: application/json\r\n\r\n${JSON.stringify({ alternativeText: options.alternativeText })}\r\n`,
+      ));
+    }
+
+    parts.push(Buffer.from(`--${boundary}--\r\n`));
+
+    const body = Buffer.concat(parts);
+
+    // 3. POST to Strapi upload endpoint
+    const uploadUrl = `${this.apiBaseUrl}/upload`;
+    const response = await fetch(uploadUrl, {
+      method: "POST",
+      headers: {
+        Authorization: this.authHeader,
+        "Content-Type": `multipart/form-data; boundary=${boundary}`,
+      },
+      body,
+      signal: AbortSignal.timeout(120_000),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => "");
+      throw new Error(`Upload failed: ${response.status} ${response.statusText} - ${errorText}`);
+    }
+
+    const result = (await response.json()) as StrapiMediaFile[];
+    // Strapi upload returns an array; return the first (and typically only) file
+    return result[0] as StrapiMediaFile;
   }
 
   // ─── Helpers ─────────────────────────────────────────────────────

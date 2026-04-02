@@ -15,6 +15,9 @@ import {
   ListRolesSchema,
   GetLocalesSchema,
   CreateLocalizedEntrySchema,
+  ListLocalizationsSchema,
+  UpdateLocalizationSchema,
+  DeleteLocalizationSchema,
 } from "../schemas/index.js";
 
 export function registerSystemTools(server: McpServer, client: StrapiClient): void {
@@ -61,20 +64,19 @@ export function registerSystemTools(server: McpServer, client: StrapiClient): vo
   // ─── 12. strapi_upload_media ─────────────────────────────────────
   server.tool(
     "strapi_upload_media",
-    "Upload a media file from a URL. The file will be downloaded and uploaded to Strapi's media library.",
+    "Upload a media file from a URL to Strapi's media library. The file is fetched from the URL and uploaded via multipart form data. Returns the uploaded file metadata including its ID for use in content entries.",
     UploadMediaSchema.shape,
     async (params) => {
       try {
         const validated = UploadMediaSchema.parse(params);
-        // Note: actual file upload via URL requires fetching the file first,
-        // which the Strapi upload API handles differently from JSON APIs.
-        // For MCP, we return guidance on how this works.
+        const uploaded = await client.uploadFile(validated.url, {
+          name: validated.name,
+          caption: validated.caption,
+          alternativeText: validated.alternativeText,
+        });
         return mcpSuccess({
-          message: "Media upload via URL is not directly supported through the REST API. "
-            + "Use the Strapi admin panel to upload files, or use strapi_create_entry with a media field "
-            + "referencing an existing media ID.",
-          suggestion: "List existing media with strapi_list_media to find file IDs for relations.",
-          providedUrl: validated.url,
+          ...uploaded,
+          message: `File uploaded successfully (ID: ${uploaded.id}, name: ${uploaded.name})`,
         });
       } catch (error) {
         return mcpError(error, "strapi_upload_media");

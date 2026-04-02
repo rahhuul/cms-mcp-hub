@@ -94,6 +94,12 @@ export const UpdatePageSchema = z.object({
   slug: z.string().optional().describe("URL slug"),
 });
 
+// ─── Pages (delete) ───────────────────────────────────────────────────
+
+export const DeletePageSchema = z.object({
+  id: z.string().describe("Page ID to delete"),
+});
+
 // ─── Tags ──────────────────────────────────────────────────────────────
 
 export const ListTagsSchema = z.object({
@@ -107,6 +113,10 @@ export const CreateTagSchema = z.object({
   name: z.string().min(1).describe("Tag name"),
   slug: z.string().optional().describe("URL slug"),
   description: z.string().optional().describe("Tag description"),
+});
+
+export const DeleteTagSchema = z.object({
+  id: z.string().describe("Tag ID to delete"),
 });
 
 // ─── Authors ───────────────────────────────────────────────────────────
@@ -148,6 +158,48 @@ export const ListNewslettersSchema = z.object({
 export const UploadImageSchema = z.object({
   url: z.string().url().describe("URL of the image to upload"),
   ref: z.string().optional().describe("Reference name for the image"),
+});
+
+// ─── Webhooks ─────────────────────────────────────────────────────────
+
+export const ListWebhooksSchema = z.object({
+  ...PaginationMixin,
+});
+
+export const CreateWebhookSchema = z.object({
+  event: z.string().describe("Webhook event name (e.g., 'post.published', 'member.added')"),
+  target_url: z.string().url().describe("URL to receive webhook POST requests"),
+});
+
+export const UpdateWebhookSchema = z.object({
+  id: z.string().describe("Webhook ID to update"),
+  event: z.string().optional().describe("Webhook event name"),
+  target_url: z.string().url().optional().describe("URL to receive webhook POST requests"),
+});
+
+export const DeleteWebhookSchema = z.object({
+  id: z.string().describe("Webhook ID to delete"),
+});
+
+// ─── Members (get/update) ─────────────────────────────────────────────
+
+export const GetMemberSchema = z.object({
+  id: z.string().describe("Member ID"),
+});
+
+export const UpdateMemberSchema = z.object({
+  id: z.string().describe("Member ID to update"),
+  email: z.string().email().optional().describe("Member email"),
+  name: z.string().optional().describe("Member name"),
+  labels: z.array(z.object({ name: z.string() })).optional().describe("Labels for segmentation"),
+  note: z.string().optional().describe("Internal note"),
+  newsletters: z.array(z.object({ id: z.string() })).optional().describe("Newsletter subscriptions"),
+});
+
+// ─── Offers ───────────────────────────────────────────────────────────
+
+export const ListOffersSchema = z.object({
+  ...PaginationMixin,
 });
 
 // ─── Site ──────────────────────────────────────────────────────────────
