@@ -1,6 +1,6 @@
 {
   "name": "@cmsmcp/contentful",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "MCP server for Contentful CMS platform — 17 tools for content types, entries, assets, environments, locales, tags, and bulk operations",
   "type": "module",
   "main": "./dist/index.js",
@@ -29,11 +29,17 @@
   "keywords": [
     "mcp",
     "contentful",
-    "cms",
+    "contentful-api",
     "headless-cms",
+    "cms",
     "content-management",
+    "model-context-protocol",
     "ai",
-    "model-context-protocol"
+    "claude",
+    "cursor",
+    "mcp-server",
+    "content-delivery",
+    "localization"
   ],
   "repository": {
     "type": "git",

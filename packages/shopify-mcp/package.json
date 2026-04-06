@@ -1,6 +1,6 @@
 {
   "name": "@cmsmcp/shopify",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "MCP server for Shopify — full Admin REST API coverage with 150+ tools for products, orders, customers, inventory, content, and more",
   "type": "module",
   "main": "./dist/index.js",
@@ -40,13 +40,18 @@
   "keywords": [
     "mcp",
     "shopify",
+    "shopify-api",
+    "shopify-admin",
+    "ecommerce",
     "model-context-protocol",
     "ai",
     "claude",
     "cursor",
-    "ecommerce",
-    "shopify-api",
-    "mcp-server"
+    "mcp-server",
+    "online-store",
+    "products",
+    "orders",
+    "inventory"
   ],
   "repository": {
     "type": "git",

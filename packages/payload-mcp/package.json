@@ -1,6 +1,6 @@
 {
   "name": "@cmsmcp/payload",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "MCP server for Payload CMS platform — 14 tools for collections, entries, globals, media, access, and versions",
   "type": "module",
   "main": "./dist/index.js",
@@ -30,11 +30,16 @@
     "mcp",
     "payload",
     "payload-cms",
-    "cms",
     "headless-cms",
+    "cms",
     "model-context-protocol",
     "ai",
-    "llm"
+    "claude",
+    "cursor",
+    "mcp-server",
+    "typescript-cms",
+    "content-management",
+    "version-control"
   ],
   "repository": {
     "type": "git",

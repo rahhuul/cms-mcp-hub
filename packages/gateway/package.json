@@ -1,6 +1,6 @@
 {
   "name": "@cmsmcp/gateway",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Universal REST API gateway for CMS MCP Hub — exposes all MCP tools as HTTP endpoints with OpenAPI spec, works with ChatGPT, Gemini, n8n, LangChain, and any HTTP client",
   "type": "module",
   "main": "./dist/index.js",
@@ -40,5 +40,19 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "rest-api",
+    "gateway",
+    "openapi",
+    "cms",
+    "ai",
+    "claude",
+    "cursor",
+    "mcp-server",
+    "http-api",
+    "api-gateway"
+  ]
 }

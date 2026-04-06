@@ -1,6 +1,6 @@
 {
   "name": "@cmsmcp/shared",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Shared utilities for CMS MCP Hub — API client, error handling, pagination, rate limiting, logging",
   "type": "module",
   "main": "./dist/index.js",
@@ -35,5 +35,17 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "cms",
+    "api-client",
+    "shared-utils",
+    "rate-limiting",
+    "pagination",
+    "error-handling",
+    "ai",
+    "typescript"
+  ]
 }

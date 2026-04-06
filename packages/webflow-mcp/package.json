@@ -1,6 +1,6 @@
 {
   "name": "@cmsmcp/webflow",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "MCP server for Webflow CMS platform — 20 tools for sites, collections, items, pages, products, orders, and publishing",
   "type": "module",
   "main": "./dist/index.js",
@@ -29,10 +29,17 @@
   "keywords": [
     "mcp",
     "webflow",
+    "webflow-api",
     "cms",
-    "ai",
+    "web-design",
     "model-context-protocol",
-    "webflow-api"
+    "ai",
+    "claude",
+    "cursor",
+    "mcp-server",
+    "ecommerce",
+    "no-code",
+    "site-builder"
   ],
   "repository": {
     "type": "git",

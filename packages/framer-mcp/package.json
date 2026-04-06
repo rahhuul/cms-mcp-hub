@@ -1,6 +1,6 @@
 {
   "name": "@cmsmcp/framer",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "MCP server for Framer CMS platform",
   "type": "module",
   "main": "./dist/index.js",
@@ -41,5 +41,20 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "framer",
+    "framer-api",
+    "cms",
+    "design",
+    "model-context-protocol",
+    "ai",
+    "claude",
+    "cursor",
+    "mcp-server",
+    "web-design",
+    "collections",
+    "publishing"
+  ]
 }

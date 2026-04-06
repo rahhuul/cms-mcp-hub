@@ -1,6 +1,6 @@
 {
   "name": "@cmsmcp/wix",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "MCP server for Wix — 18 tools for data collections, eCommerce, contacts, blog, bookings, and site management",
   "type": "module",
   "main": "./dist/index.js",
@@ -41,13 +41,18 @@
   "keywords": [
     "mcp",
     "wix",
+    "wix-api",
+    "cms",
+    "ecommerce",
     "model-context-protocol",
     "ai",
     "claude",
     "cursor",
-    "cms",
-    "ecommerce",
-    "mcp-server"
+    "mcp-server",
+    "site-builder",
+    "blog",
+    "booking",
+    "crm"
   ],
   "repository": {
     "type": "git",
