@@ -1,6 +1,6 @@
 {
   "name": "@cmsmcp/shared",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Shared utilities for CMS MCP Hub — API client, error handling, pagination, rate limiting, logging",
   "type": "module",
   "main": "./dist/index.js",
@@ -11,7 +11,9 @@
       "import": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",

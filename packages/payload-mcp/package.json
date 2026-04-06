@@ -1,6 +1,6 @@
 {
   "name": "@cmsmcp/payload",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "MCP server for Payload CMS platform — 14 tools for collections, entries, globals, media, access, and versions",
   "type": "module",
   "main": "./dist/index.js",
@@ -14,7 +14,9 @@
       "import": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",

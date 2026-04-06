@@ -1,6 +1,6 @@
 {
   "name": "@cmsmcp/yoast",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "MCP server for Yoast SEO — 13 tools for managing SEO metadata, scores, redirects, social data, schema markup, and sitemaps via WordPress REST API",
   "type": "module",
   "main": "./dist/index.js",

@@ -1,6 +1,6 @@
 {
   "name": "@cmsmcp/wix",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "MCP server for Wix — 18 tools for data collections, eCommerce, contacts, blog, bookings, and site management",
   "type": "module",
   "main": "./dist/index.js",

@@ -1,6 +1,6 @@
 {
   "name": "@cmsmcp/wordpress",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "MCP server for WordPress — full REST API v2 coverage with 80+ tools",
   "type": "module",
   "main": "./dist/index.js",
@@ -14,7 +14,9 @@
       "import": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",

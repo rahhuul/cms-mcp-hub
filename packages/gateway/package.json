@@ -1,6 +1,6 @@
 {
   "name": "@cmsmcp/gateway",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Universal REST API gateway for CMS MCP Hub — exposes all MCP tools as HTTP endpoints with OpenAPI spec, works with ChatGPT, Gemini, n8n, LangChain, and any HTTP client",
   "type": "module",
   "main": "./dist/index.js",
@@ -14,7 +14,9 @@
       "import": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
