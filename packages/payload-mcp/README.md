@@ -1,50 +1,22 @@
 # @cmsmcp/payload
 
-MCP (Model Context Protocol) server for **Payload CMS** — enables AI agents to manage collections, entries, globals, media, and versions through 14 tools.
+MCP server for Payload CMS -- 21 tools for managing collections, entries, globals, media, access control, versions, and bulk operations.
 
-## Tools (14)
+[![npm version](https://img.shields.io/npm/v/@cmsmcp/payload.svg)](https://www.npmjs.com/package/@cmsmcp/payload)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)
 
-| Tool | Description |
-|------|-------------|
-| `payload_list_collections` | Discover all available collections and their field schemas |
-| `payload_list_entries` | List entries with filtering, sorting, pagination, and depth |
-| `payload_get_entry` | Get a single entry by ID with relationship population |
-| `payload_create_entry` | Create a new entry in any collection |
-| `payload_update_entry` | Update an existing entry's fields |
-| `payload_delete_entry` | Delete a single entry by ID |
-| `payload_list_globals` | Discover all available globals and their schemas |
-| `payload_get_global` | Get a global document by slug |
-| `payload_update_global` | Update a global document's fields |
-| `payload_list_media` | List uploaded media files with pagination |
-| `payload_upload_media` | Upload a media file from a URL |
-| `payload_get_access` | Get current user's access permissions |
-| `payload_list_versions` | List version history for an entry |
-| `payload_restore_version` | Restore a specific version |
+## Quick Start
 
-## Configuration
+### Claude Desktop
 
-Set environment variables:
-
-```bash
-# Required
-PAYLOAD_URL=http://localhost:3000
-
-# Auth Option 1: API Key
-PAYLOAD_API_KEY=your-api-key
-
-# Auth Option 2: Email/Password (gets JWT)
-PAYLOAD_EMAIL=admin@example.com
-PAYLOAD_PASSWORD=your-password
-```
-
-## Usage with Claude Desktop
+Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json`):
 
 ```json
 {
   "mcpServers": {
     "payload": {
       "command": "npx",
-      "args": ["@cmsmcp/payload"],
+      "args": ["-y", "@cmsmcp/payload"],
       "env": {
         "PAYLOAD_URL": "http://localhost:3000",
         "PAYLOAD_API_KEY": "your-api-key"
@@ -54,27 +26,99 @@ PAYLOAD_PASSWORD=your-password
 }
 ```
 
-## Usage with MCP Inspector
+### Claude Code
 
 ```bash
-npx @modelcontextprotocol/inspector node packages/payload-mcp/dist/index.js
+claude mcp add payload -e PAYLOAD_URL=http://localhost:3000 -e PAYLOAD_API_KEY=your-key -- npx -y @cmsmcp/payload
 ```
 
-## Key Features
+### Cursor / Windsurf / Any MCP Client
 
-- **Dynamic collection discovery** — Automatically detects all collections and their schemas
-- **Flexible authentication** — Supports API Key or email/password (JWT) auth
-- **Relationship depth** — Control how deep relationships are populated (0-10)
-- **Where queries** — Full Payload query syntax for filtering entries
-- **Version management** — List and restore entry versions
-- **Globals support** — Read and update global documents (settings, navigation, etc.)
+Same JSON config format -- add to your client's MCP settings file.
+
+## Configuration
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `PAYLOAD_URL` | Yes | Payload CMS server URL |
+| `PAYLOAD_API_KEY` | Yes | Payload API key |
+
+## Available Tools (21 tools)
+
+### Content (9 tools)
+
+| Tool | Description |
+|------|-------------|
+| `payload_list_collections` | List all collections with their schemas |
+| `payload_list_entries` | List entries in a collection with pagination |
+| `payload_get_entry` | Get a single entry by ID |
+| `payload_create_entry` | Create a new entry in a collection |
+| `payload_update_entry` | Update an existing entry |
+| `payload_delete_entry` | Delete an entry |
+| `payload_get_version` | Get a specific version of an entry |
+| `payload_publish_entry` | Publish a draft entry |
+| `payload_unpublish_entry` | Unpublish a published entry |
+
+### Globals (3 tools)
+
+| Tool | Description |
+|------|-------------|
+| `payload_list_globals` | List all global documents |
+| `payload_get_global` | Get a global document by slug |
+| `payload_update_global` | Update a global document |
+
+### Media (2 tools)
+
+| Tool | Description |
+|------|-------------|
+| `payload_list_media` | List uploaded media files |
+| `payload_upload_media` | Upload a media file |
+
+### Access & System (4 tools)
+
+| Tool | Description |
+|------|-------------|
+| `payload_get_access` | Get current access control permissions |
+| `payload_list_versions` | List versions for a collection entry |
+| `payload_restore_version` | Restore a previous version |
+| `payload_get_current_user` | Get the currently authenticated user |
+
+### Bulk Operations (3 tools)
+
+| Tool | Description |
+|------|-------------|
+| `payload_bulk_create` | Bulk create multiple entries at once |
+| `payload_bulk_update` | Bulk update multiple entries |
+| `payload_bulk_delete` | Bulk delete multiple entries |
+
+## Examples
+
+```
+You: "List all collections in my Payload CMS"
+AI: Uses payload_list_collections to show all registered collections and their field schemas.
+
+You: "Create a new blog post"
+AI: Uses payload_create_entry with the blog collection slug and the post data.
+
+You: "Restore the previous version of this page"
+AI: Uses payload_list_versions to find available versions,
+    then payload_restore_version to roll back to the selected version.
+```
 
 ## Development
 
 ```bash
-npm install
+# Build
 npx turbo build --filter=@cmsmcp/payload
+
+# Test
 npx turbo test --filter=@cmsmcp/payload
+
+# Dev mode
+npx turbo dev --filter=@cmsmcp/payload
+
+# Test with MCP Inspector
+npx @modelcontextprotocol/inspector node packages/payload-mcp/dist/index.js
 ```
 
 ## License

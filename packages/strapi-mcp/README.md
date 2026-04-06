@@ -1,98 +1,106 @@
 # @cmsmcp/strapi
 
-MCP server for **Strapi** headless CMS. Enables AI agents to manage content across dynamic content types with 17 tools, including full CRUD, publish/unpublish workflow, i18n localization, and media management.
+MCP server for Strapi -- 17 tools for managing content types, entries, media, users, roles, localization, and publish workflows.
 
-## Requirements
+[![npm version](https://img.shields.io/npm/v/@cmsmcp/strapi.svg)](https://www.npmjs.com/package/@cmsmcp/strapi)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)
 
-- Node.js 18+
-- Strapi v4+
-- API Token (Settings → API Tokens in Strapi Admin)
-
-## Configuration
-
-```bash
-STRAPI_URL=http://localhost:1337
-STRAPI_API_TOKEN=your_api_token_here
-```
+## Quick Start
 
 ### Claude Desktop
+
+Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json`):
 
 ```json
 {
   "mcpServers": {
     "strapi": {
       "command": "npx",
-      "args": ["@cmsmcp/strapi"],
+      "args": ["-y", "@cmsmcp/strapi"],
       "env": {
         "STRAPI_URL": "http://localhost:1337",
-        "STRAPI_API_TOKEN": "your_api_token_here"
+        "STRAPI_API_TOKEN": "your-api-token"
       }
     }
   }
 }
 ```
 
-## Tools (17)
+### Claude Code
 
-### Discovery (2)
-
-| Tool | Description |
-|------|-------------|
-| `strapi_list_content_types` | Discover all content types and their field schemas |
-| `strapi_list_components` | List reusable component schemas |
-
-### Content CRUD (5)
-
-| Tool | Description |
-|------|-------------|
-| `strapi_list_entries` | List entries with filters, sorting, pagination, population |
-| `strapi_get_entry` | Get single entry with relations |
-| `strapi_create_entry` | Create entry for any content type |
-| `strapi_update_entry` | Update entry fields |
-| `strapi_delete_entry` | Delete entry |
-
-### Workflow (3)
-
-| Tool | Description |
-|------|-------------|
-| `strapi_bulk_delete` | Delete multiple entries at once |
-| `strapi_publish_entry` | Publish a draft entry |
-| `strapi_unpublish_entry` | Revert entry to draft |
-
-### Media (3)
-
-| Tool | Description |
-|------|-------------|
-| `strapi_list_media` | List uploaded media files |
-| `strapi_upload_media` | Upload media file |
-| `strapi_delete_media` | Delete media file |
-
-### Users & Roles (2)
-
-| Tool | Description |
-|------|-------------|
-| `strapi_list_users` | List admin/content manager users |
-| `strapi_list_roles` | List roles and permissions |
-
-### i18n (2)
-
-| Tool | Description |
-|------|-------------|
-| `strapi_get_locales` | List available locales |
-| `strapi_create_localized_entry` | Create localized version of an entry |
-
-### Dynamic Content Types
-
-Strapi content types are dynamic — use `strapi_list_content_types` first to discover what's available, then use the `contentType` parameter in other tools to target any type.
-
-### Filtering
-
-Supports Strapi's full filter syntax:
-```json
-{ "filters": { "title": { "$contains": "hello" } } }
+```bash
+claude mcp add strapi -e STRAPI_URL=http://localhost:1337 -e STRAPI_API_TOKEN=your-token -- npx -y @cmsmcp/strapi
 ```
 
-Operators: `$eq`, `$ne`, `$lt`, `$lte`, `$gt`, `$gte`, `$in`, `$contains`, `$null`, `$between`, `$startsWith`, `$endsWith`
+### Cursor / Windsurf / Any MCP Client
+
+Same JSON config format -- add to your client's MCP settings file.
+
+## Configuration
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `STRAPI_URL` | Yes | Strapi server URL (e.g., `http://localhost:1337`) |
+| `STRAPI_API_TOKEN` | Yes | Strapi API token (full access recommended) |
+
+## Available Tools (17 tools)
+
+### Content (9 tools)
+
+| Tool | Description |
+|------|-------------|
+| `strapi_list_content_types` | List all content types with their schemas |
+| `strapi_list_entries` | List entries for a content type with pagination |
+| `strapi_get_entry` | Get a single entry by ID |
+| `strapi_create_entry` | Create a new entry in a content type |
+| `strapi_update_entry` | Update an existing entry |
+| `strapi_delete_entry` | Delete an entry |
+| `strapi_bulk_delete` | Bulk delete multiple entries |
+| `strapi_publish_entry` | Publish a draft entry |
+| `strapi_unpublish_entry` | Unpublish a published entry |
+
+### System & Media (8 tools)
+
+| Tool | Description |
+|------|-------------|
+| `strapi_list_components` | List all reusable components |
+| `strapi_list_media` | List uploaded media files |
+| `strapi_upload_media` | Upload a media file |
+| `strapi_delete_media` | Delete a media file |
+| `strapi_list_users` | List admin users |
+| `strapi_list_roles` | List user roles |
+| `strapi_get_locales` | Get available locales for i18n |
+| `strapi_create_localized_entry` | Create a localized version of an entry |
+
+## Examples
+
+```
+You: "List all my content types"
+AI: Uses strapi_list_content_types to show all registered content types and their field schemas.
+
+You: "Create a new blog post"
+AI: Uses strapi_list_content_types to find the blog content type,
+    then strapi_create_entry to create the post with the provided data.
+
+You: "Publish my draft article"
+AI: Uses strapi_publish_entry to change the entry status from draft to published.
+```
+
+## Development
+
+```bash
+# Build
+npx turbo build --filter=@cmsmcp/strapi
+
+# Test
+npx turbo test --filter=@cmsmcp/strapi
+
+# Dev mode
+npx turbo dev --filter=@cmsmcp/strapi
+
+# Test with MCP Inspector
+npx @modelcontextprotocol/inspector node packages/strapi-mcp/dist/index.js
+```
 
 ## License
 

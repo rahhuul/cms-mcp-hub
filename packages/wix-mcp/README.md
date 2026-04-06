@@ -1,10 +1,15 @@
 # @cmsmcp/wix
 
-MCP server for **Wix** -- 18 tools for data collections, eCommerce, contacts, blog, bookings, and site management via the Wix REST API v2.
+MCP server for Wix -- 21 tools for data collections, e-commerce, contacts, blog, bookings, and site management via the Wix REST API.
 
-Part of [CMS MCP Hub](https://github.com/rahhuul/cms-mcp-hub).
+[![npm version](https://img.shields.io/npm/v/@cmsmcp/wix.svg)](https://www.npmjs.com/package/@cmsmcp/wix)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)
 
 ## Quick Start
+
+### Claude Desktop
+
+Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json`):
 
 ```json
 {
@@ -21,118 +26,87 @@ Part of [CMS MCP Hub](https://github.com/rahhuul/cms-mcp-hub).
 }
 ```
 
-Works with: **Claude Desktop, Claude Code, Cursor, Windsurf, Copilot, Cline, Zed**.
+### Claude Code
 
-## Setup
+```bash
+claude mcp add wix -e WIX_API_KEY=your-key -e WIX_SITE_ID=your-site-id -- npx -y @cmsmcp/wix
+```
 
-1. Go to [Wix Dev Center](https://dev.wix.com/) and create an API key
-2. Select the permissions your tools need (Data, Stores, eCommerce, Contacts, Blog, Bookings, Site)
-3. Copy the API key and your site ID
-4. Set `WIX_API_KEY` and `WIX_SITE_ID` environment variables
+### Cursor / Windsurf / Any MCP Client
 
-## Environment Variables
+Same JSON config format -- add to your client's MCP settings file.
+
+## Configuration
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `WIX_API_KEY` | Yes | Wix API key from Dev Center |
+| `WIX_API_KEY` | Yes | Wix API key |
 | `WIX_SITE_ID` | Yes | Wix site ID |
 
-## Tools (18)
+## Available Tools (21 tools)
 
-| Category | Tools | Description |
-|----------|-------|-------------|
-| Data Collections | 2 | List and get collection schemas |
-| Data Items | 6 | Query, get, insert, update, remove, bulk insert |
-| Contacts | 2 | Query contacts, create contact |
-| Products | 2 | List and get store products |
-| Orders | 2 | List and get eCommerce orders |
-| Blog | 2 | List posts, create draft/published post |
-| Bookings | 1 | List booking services |
-| Site | 1 | Get site properties |
-
-### Data Collections
+### Data Collections (8 tools)
 
 | Tool | Description |
 |------|-------------|
-| `wix_list_data_collections` | List all data collections with schemas and item counts |
-| `wix_get_data_collection` | Get a specific collection by ID |
+| `wix_list_data_collections` | List all data collections |
+| `wix_get_data_collection` | Get a data collection schema |
+| `wix_query_data_items` | Query data items with filters |
+| `wix_get_data_item` | Get a single data item by ID |
+| `wix_insert_data_item` | Insert a new data item |
+| `wix_update_data_item` | Update an existing data item |
+| `wix_remove_data_item` | Remove a data item |
+| `wix_bulk_insert_data_items` | Bulk insert multiple data items |
 
-### Data Items
-
-| Tool | Description |
-|------|-------------|
-| `wix_query_data_items` | Query items with WQL filters, sorting, and pagination |
-| `wix_get_data_item` | Get a single item by ID |
-| `wix_insert_data_item` | Insert a new item into a collection |
-| `wix_update_data_item` | Update an existing item |
-| `wix_remove_data_item` | Remove an item from a collection |
-| `wix_bulk_insert_data_items` | Insert up to 50 items at once |
-
-### Contacts
+### Contacts (5 tools)
 
 | Tool | Description |
 |------|-------------|
-| `wix_list_contacts` | Query contacts with WQL filters |
-| `wix_create_contact` | Create a new contact with name, email, phone |
+| `wix_list_contacts` | List all contacts |
+| `wix_get_contact` | Get a single contact |
+| `wix_create_contact` | Create a new contact |
+| `wix_update_contact` | Update a contact |
+| `wix_delete_contact` | Delete a contact |
 
-### Products (Wix Stores)
-
-| Tool | Description |
-|------|-------------|
-| `wix_list_products` | List store products with pagination |
-| `wix_get_product` | Get product details with optional variants |
-
-### Orders (Wix eCommerce)
+### E-Commerce (4 tools)
 
 | Tool | Description |
 |------|-------------|
-| `wix_list_orders` | List eCommerce orders |
-| `wix_get_order` | Get order details by ID |
+| `wix_list_products` | List store products |
+| `wix_get_product` | Get a single product |
+| `wix_list_orders` | List store orders |
+| `wix_get_order` | Get a single order |
 
-### Blog
-
-| Tool | Description |
-|------|-------------|
-| `wix_list_blog_posts` | List posts, filter by featured/status |
-| `wix_create_blog_post` | Create a blog post (draft or published) |
-
-### Bookings
+### Blog (2 tools)
 
 | Tool | Description |
 |------|-------------|
-| `wix_list_booking_services` | List all booking services |
+| `wix_list_blog_posts` | List blog posts |
+| `wix_create_blog_post` | Create a new blog post |
 
-### Site
+### Bookings & Site (2 tools)
 
 | Tool | Description |
 |------|-------------|
-| `wix_get_site_properties` | Get site name, URL, locale, business info |
+| `wix_list_booking_services` | List booking services |
+| `wix_get_site_properties` | Get site properties and settings |
 
-## WQL (Wix Query Language)
+## Examples
 
-Data items and contacts support WQL filtering:
-
-```json
-{
-  "filter": {
-    "status": { "$eq": "active" }
-  }
-}
 ```
+You: "List all my data collections"
+AI: Uses wix_list_data_collections to show all collections with their schemas and field definitions.
 
-### Supported Operators
+You: "Add a new item to my Products collection"
+AI: Uses wix_get_data_collection to check the schema,
+    then wix_insert_data_item to add the new item with the required fields.
 
-| Operator | Description | Example |
-|----------|-------------|---------|
-| `$eq` | Equals | `{"field": {"$eq": "value"}}` |
-| `$ne` | Not equals | `{"field": {"$ne": "value"}}` |
-| `$gt` | Greater than | `{"price": {"$gt": 10}}` |
-| `$gte` | Greater than or equal | `{"price": {"$gte": 10}}` |
-| `$lt` | Less than | `{"price": {"$lt": 100}}` |
-| `$lte` | Less than or equal | `{"price": {"$lte": 100}}` |
-| `$in` | In list | `{"status": {"$in": ["a", "b"]}}` |
-| `$contains` | Contains substring | `{"name": {"$contains": "widget"}}` |
-| `$startsWith` | Starts with | `{"name": {"$startsWith": "A"}}` |
+You: "Show me all contacts from the last month"
+AI: Uses wix_list_contacts with date filtering to retrieve recent contacts.
+
+You: "Create a new blog post"
+AI: Uses wix_create_blog_post with the provided title, content, and metadata.
+```
 
 ## Development
 

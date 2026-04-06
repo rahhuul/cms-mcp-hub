@@ -27,8 +27,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build packages
-        run: npx turbo build --filter=@cmsmcp/shared --filter=@cmsmcp/wordpress --filter=@cmsmcp/woocommerce --filter=@cmsmcp/framer --filter=@cmsmcp/strapi --filter=@cmsmcp/ghost --filter=@cmsmcp/gateway
+      - name: Build all packages
+        run: npx turbo build
 
       - name: Run tests
-        run: npx turbo test --filter=@cmsmcp/shared --filter=@cmsmcp/wordpress --filter=@cmsmcp/woocommerce --filter=@cmsmcp/framer --filter=@cmsmcp/strapi --filter=@cmsmcp/ghost
+        run: npx turbo test
+
+      - name: Type check
+        run: npx turbo typecheck

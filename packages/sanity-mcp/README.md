@@ -1,38 +1,15 @@
 # @cmsmcp/sanity
 
-MCP (Model Context Protocol) server for **Sanity CMS**. Provides 12 tools for AI agents to interact with the Sanity Content Lake via GROQ queries, document CRUD, asset management, transactions, and publishing.
+MCP server for Sanity -- 16 tools for GROQ queries, document CRUD, asset management, datasets, transactions, publishing, and history.
 
-## Tools (12)
+[![npm version](https://img.shields.io/npm/v/@cmsmcp/sanity.svg)](https://www.npmjs.com/package/@cmsmcp/sanity)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)
 
-| Tool | Description |
-|------|-------------|
-| `sanity_query` | Execute GROQ queries against the dataset |
-| `sanity_get_document` | Get a document by ID |
-| `sanity_create_document` | Create a new document |
-| `sanity_update_document` | Update document fields (set/unset) |
-| `sanity_delete_document` | Delete a document by ID |
-| `sanity_list_datasets` | List all project datasets |
-| `sanity_list_document_types` | List all unique document types |
-| `sanity_list_assets` | List image or file assets with pagination |
-| `sanity_upload_image` | Upload an image from URL |
-| `sanity_create_transaction` | Execute atomic mutations in a transaction |
-| `sanity_get_history` | Get transaction history for a document |
-| `sanity_publish_draft` | Publish a draft document |
+## Quick Start
 
-## Configuration
+### Claude Desktop
 
-Set the following environment variables:
-
-```bash
-SANITY_PROJECT_ID=your-project-id    # Required
-SANITY_TOKEN=your-api-token          # Required
-SANITY_DATASET=production            # Optional (default: "production")
-SANITY_API_VERSION=2024-01           # Optional (default: "2024-01")
-```
-
-## Usage with Claude Desktop
-
-Add to your `claude_desktop_config.json`:
+Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json`):
 
 ```json
 {
@@ -42,36 +19,100 @@ Add to your `claude_desktop_config.json`:
       "args": ["-y", "@cmsmcp/sanity"],
       "env": {
         "SANITY_PROJECT_ID": "your-project-id",
-        "SANITY_TOKEN": "your-api-token",
-        "SANITY_DATASET": "production"
+        "SANITY_DATASET": "production",
+        "SANITY_TOKEN": "your-token"
       }
     }
   }
 }
 ```
 
-## GROQ Examples
+### Claude Code
+
+```bash
+claude mcp add sanity -e SANITY_PROJECT_ID=xxx -e SANITY_DATASET=production -e SANITY_TOKEN=xxx -- npx -y @cmsmcp/sanity
+```
+
+### Cursor / Windsurf / Any MCP Client
+
+Same JSON config format -- add to your client's MCP settings file.
+
+## Configuration
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `SANITY_PROJECT_ID` | Yes | Sanity project ID |
+| `SANITY_DATASET` | No | Dataset name (default: `production`) |
+| `SANITY_TOKEN` | Yes | Sanity API token with write access |
+
+## Available Tools (16 tools)
+
+### Content (7 tools)
+
+| Tool | Description |
+|------|-------------|
+| `sanity_query` | Execute a GROQ query against the Content Lake |
+| `sanity_get_document` | Get a single document by ID |
+| `sanity_create_document` | Create a new document |
+| `sanity_update_document` | Update (patch) an existing document |
+| `sanity_delete_document` | Delete a document |
+| `sanity_publish_draft` | Publish a draft document |
+| `sanity_increment_field` | Increment a numeric field value |
+| `sanity_decrement_field` | Decrement a numeric field value |
+
+### Datasets & System (3 tools)
+
+| Tool | Description |
+|------|-------------|
+| `sanity_list_datasets` | List all datasets in the project |
+| `sanity_list_document_types` | List all document types |
+| `sanity_export_dataset` | Export a dataset |
+
+### Assets (3 tools)
+
+| Tool | Description |
+|------|-------------|
+| `sanity_list_assets` | List uploaded assets (images, files) |
+| `sanity_upload_image` | Upload an image asset |
+| `sanity_upload_file` | Upload a file asset |
+
+### Transactions & History (2 tools)
+
+| Tool | Description |
+|------|-------------|
+| `sanity_create_transaction` | Execute a multi-document transaction |
+| `sanity_get_history` | Get document revision history |
+
+## Examples
 
 ```
-# List all posts
-*[_type == "post"] | order(_createdAt desc) [0...10]
+You: "Find all published blog posts"
+AI: Uses sanity_query with a GROQ query like *[_type == "post" && !(_id in path("drafts.**"))]
 
-# Get post by slug
-*[_type == "post" && slug.current == "hello-world"][0]
+You: "Create a new author document"
+AI: Uses sanity_create_document with _type: "author" and the provided fields.
 
-# Count documents by type
-count(*[_type == "post"])
+You: "Publish my draft post"
+AI: Uses sanity_publish_draft to move the draft to the published state.
 
-# Full-text search
-*[_type == "post" && title match "sanity*"]
+You: "Show the revision history for this document"
+AI: Uses sanity_get_history to display all revisions with timestamps and authors.
 ```
 
 ## Development
 
 ```bash
-npm install
-npm run build
-npm test
+# Build
+npx turbo build --filter=@cmsmcp/sanity
+
+# Test
+npx turbo test --filter=@cmsmcp/sanity
+
+# Dev mode
+npx turbo dev --filter=@cmsmcp/sanity
+
+# Test with MCP Inspector
+npx @modelcontextprotocol/inspector node packages/sanity-mcp/dist/index.js
 ```
 
 ## License

@@ -1,224 +1,250 @@
 # @cmsmcp/woocommerce
 
-MCP server for **WooCommerce** stores with **full REST API v3 coverage** — 92 tools spanning every resource.
+MCP server for WooCommerce -- 95 tools for complete store management including products, orders, customers, coupons, taxes, shipping, webhooks, and more.
 
-## Requirements
+[![npm version](https://img.shields.io/npm/v/@cmsmcp/woocommerce.svg)](https://www.npmjs.com/package/@cmsmcp/woocommerce)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)
 
-- Node.js 18+
-- WooCommerce REST API v3 enabled
-- Consumer Key + Consumer Secret (WP Admin → WooCommerce → Settings → Advanced → REST API)
-
-## Configuration
-
-```bash
-WOOCOMMERCE_URL=https://mystore.com
-WOOCOMMERCE_CONSUMER_KEY=ck_your_key_here
-WOOCOMMERCE_CONSUMER_SECRET=cs_your_secret_here
-```
-
-### Authentication
-
-- **HTTPS sites** → Basic Auth (automatic)
-- **HTTP sites** → OAuth 1.0a HMAC-SHA256 (automatic)
+## Quick Start
 
 ### Claude Desktop
+
+Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json`):
 
 ```json
 {
   "mcpServers": {
     "woocommerce": {
       "command": "npx",
-      "args": ["@cmsmcp/woocommerce"],
+      "args": ["-y", "@cmsmcp/woocommerce"],
       "env": {
         "WOOCOMMERCE_URL": "https://mystore.com",
-        "WOOCOMMERCE_CONSUMER_KEY": "ck_your_key",
-        "WOOCOMMERCE_CONSUMER_SECRET": "cs_your_secret"
+        "WOOCOMMERCE_CONSUMER_KEY": "ck_xxx",
+        "WOOCOMMERCE_CONSUMER_SECRET": "cs_xxx"
       }
     }
   }
 }
 ```
 
-## Tools (92)
+### Claude Code
 
-### Products (10)
+```bash
+claude mcp add woocommerce -e WOOCOMMERCE_URL=https://mystore.com -e WOOCOMMERCE_CONSUMER_KEY=ck_xxx -e WOOCOMMERCE_CONSUMER_SECRET=cs_xxx -- npx -y @cmsmcp/woocommerce
+```
+
+### Cursor / Windsurf / Any MCP Client
+
+Same JSON config format -- add to your client's MCP settings file.
+
+## Configuration
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `WOOCOMMERCE_URL` | Yes | Your WordPress/WooCommerce store URL |
+| `WOOCOMMERCE_CONSUMER_KEY` | Yes | WooCommerce REST API consumer key (`ck_...`) |
+| `WOOCOMMERCE_CONSUMER_SECRET` | Yes | WooCommerce REST API consumer secret (`cs_...`) |
+
+## Available Tools (95 tools)
+
+### Products (10 tools)
 
 | Tool | Description |
 |------|-------------|
-| `woo_list_products` | List products with filters (search, status, category, tag, SKU, sort) |
-| `woo_get_product` | Get product details |
-| `woo_create_product` | Create product (simple, variable, grouped, external) |
-| `woo_update_product` | Update product fields |
-| `woo_delete_product` | Delete product |
+| `woo_list_products` | List products with filtering and pagination |
+| `woo_get_product` | Get a single product by ID |
+| `woo_create_product` | Create a new product |
+| `woo_update_product` | Update an existing product |
+| `woo_delete_product` | Delete a product |
 | `woo_list_product_variations` | List variations of a variable product |
-| `woo_get_product_variation` | Get variation details |
-| `woo_create_product_variation` | Create a variation |
-| `woo_update_product_variation` | Update a variation |
-| `woo_delete_product_variation` | Delete a variation |
+| `woo_get_product_variation` | Get a single product variation |
+| `woo_create_product_variation` | Create a product variation |
+| `woo_update_product_variation` | Update a product variation |
+| `woo_delete_product_variation` | Delete a product variation |
 
-### Product Attributes & Terms (10)
-
-| Tool | Description |
-|------|-------------|
-| `woo_list_product_attributes` | List attributes (Color, Size, etc.) |
-| `woo_get_product_attribute` | Get attribute details |
-| `woo_create_product_attribute` | Create attribute |
-| `woo_update_product_attribute` | Update attribute |
-| `woo_delete_product_attribute` | Delete attribute |
-| `woo_list_attribute_terms` | List terms for an attribute (Red, Blue, etc.) |
-| `woo_get_attribute_term` | Get term details |
-| `woo_create_attribute_term` | Create term |
-| `woo_update_attribute_term` | Update term |
-| `woo_delete_attribute_term` | Delete term |
-
-### Product Categories (5)
+### Product Attributes (10 tools)
 
 | Tool | Description |
 |------|-------------|
-| `woo_list_categories` | List categories |
-| `woo_get_category` | Get category |
-| `woo_create_category` | Create category (supports nesting) |
-| `woo_update_category` | Update category |
-| `woo_delete_category` | Delete category |
+| `woo_list_product_attributes` | List all product attributes |
+| `woo_get_product_attribute` | Get a single product attribute |
+| `woo_create_product_attribute` | Create a new attribute (e.g., Color, Size) |
+| `woo_update_product_attribute` | Update a product attribute |
+| `woo_delete_product_attribute` | Delete a product attribute |
+| `woo_list_attribute_terms` | List terms for an attribute (e.g., Red, Blue) |
+| `woo_get_attribute_term` | Get a single attribute term |
+| `woo_create_attribute_term` | Create a new attribute term |
+| `woo_update_attribute_term` | Update an attribute term |
+| `woo_delete_attribute_term` | Delete an attribute term |
 
-### Product Tags (5)
-
-| Tool | Description |
-|------|-------------|
-| `woo_list_tags` | List tags |
-| `woo_get_tag` | Get tag |
-| `woo_create_tag` | Create tag |
-| `woo_update_tag` | Update tag |
-| `woo_delete_tag` | Delete tag |
-
-### Product Shipping Classes (5)
+### Orders (5 tools)
 
 | Tool | Description |
 |------|-------------|
-| `woo_list_shipping_classes` | List shipping classes |
-| `woo_get_shipping_class` | Get shipping class |
-| `woo_create_shipping_class` | Create shipping class |
-| `woo_update_shipping_class` | Update shipping class |
-| `woo_delete_shipping_class` | Delete shipping class |
+| `woo_list_orders` | List orders with filtering and pagination |
+| `woo_get_order` | Get a single order by ID |
+| `woo_create_order` | Create a new order |
+| `woo_update_order` | Update an existing order |
+| `woo_delete_order` | Delete an order |
 
-### Product Reviews (5)
-
-| Tool | Description |
-|------|-------------|
-| `woo_list_product_reviews` | List reviews (filter by product, status) |
-| `woo_get_product_review` | Get review |
-| `woo_create_product_review` | Create review with rating |
-| `woo_update_product_review` | Update review (content, rating, status) |
-| `woo_delete_product_review` | Delete review |
-
-### Orders (5)
+### Order Notes (4 tools)
 
 | Tool | Description |
 |------|-------------|
-| `woo_list_orders` | List orders (status, customer, date range) |
-| `woo_get_order` | Get full order details |
-| `woo_create_order` | Create order with line items, coupons |
-| `woo_update_order` | Update order status/metadata |
-| `woo_delete_order` | Delete order |
+| `woo_list_order_notes` | List notes for an order |
+| `woo_get_order_note` | Get a single order note |
+| `woo_create_order_note` | Add a note to an order |
+| `woo_delete_order_note` | Delete an order note |
 
-### Order Notes (4)
-
-| Tool | Description |
-|------|-------------|
-| `woo_list_order_notes` | List order notes |
-| `woo_get_order_note` | Get specific note |
-| `woo_create_order_note` | Add note (private or customer-facing) |
-| `woo_delete_order_note` | Delete note |
-
-### Order Refunds (4)
+### Order Refunds (4 tools)
 
 | Tool | Description |
 |------|-------------|
 | `woo_list_order_refunds` | List refunds for an order |
-| `woo_get_order_refund` | Get refund details |
-| `woo_create_order_refund` | Create refund (full or partial, via gateway) |
-| `woo_delete_order_refund` | Delete refund record |
+| `woo_get_order_refund` | Get a single order refund |
+| `woo_create_order_refund` | Create a refund for an order |
+| `woo_delete_order_refund` | Delete an order refund |
 
-### Customers (6)
-
-| Tool | Description |
-|------|-------------|
-| `woo_list_customers` | List customers |
-| `woo_get_customer` | Get customer profile |
-| `woo_create_customer` | Create customer |
-| `woo_update_customer` | Update customer |
-| `woo_delete_customer` | Delete customer |
-| `woo_get_customer_downloads` | Get customer's downloadable files |
-
-### Coupons (5)
+### Customers (6 tools)
 
 | Tool | Description |
 |------|-------------|
-| `woo_list_coupons` | List coupons |
-| `woo_get_coupon` | Get coupon details |
-| `woo_create_coupon` | Create coupon (percent, fixed_cart, fixed_product) |
-| `woo_update_coupon` | Update coupon |
-| `woo_delete_coupon` | Delete coupon |
+| `woo_list_customers` | List customers with filtering |
+| `woo_get_customer` | Get a single customer by ID |
+| `woo_create_customer` | Create a new customer |
+| `woo_update_customer` | Update a customer |
+| `woo_delete_customer` | Delete a customer |
+| `woo_get_customer_downloads` | Get downloads for a customer |
 
-### Tax Rates & Classes (8)
+### Coupons (5 tools)
 
 | Tool | Description |
 |------|-------------|
-| `woo_list_tax_rates` | List tax rates |
-| `woo_get_tax_rate` | Get tax rate |
-| `woo_create_tax_rate` | Create tax rate |
-| `woo_update_tax_rate` | Update tax rate |
-| `woo_delete_tax_rate` | Delete tax rate |
+| `woo_list_coupons` | List all coupons |
+| `woo_get_coupon` | Get a single coupon |
+| `woo_create_coupon` | Create a new coupon |
+| `woo_update_coupon` | Update a coupon |
+| `woo_delete_coupon` | Delete a coupon |
+
+### Product Reviews (5 tools)
+
+| Tool | Description |
+|------|-------------|
+| `woo_list_product_reviews` | List all product reviews |
+| `woo_get_product_review` | Get a single review |
+| `woo_create_product_review` | Create a product review |
+| `woo_update_product_review` | Update a product review |
+| `woo_delete_product_review` | Delete a product review |
+
+### Taxonomy (10 tools)
+
+| Tool | Description |
+|------|-------------|
+| `woo_list_categories` | List product categories |
+| `woo_get_category` | Get a single category |
+| `woo_create_category` | Create a product category |
+| `woo_update_category` | Update a product category |
+| `woo_delete_category` | Delete a product category |
+| `woo_list_tags` | List product tags |
+| `woo_get_tag` | Get a single tag |
+| `woo_create_tag` | Create a product tag |
+| `woo_update_tag` | Update a product tag |
+| `woo_delete_tag` | Delete a product tag |
+
+### Tax (8 tools)
+
+| Tool | Description |
+|------|-------------|
+| `woo_list_tax_rates` | List all tax rates |
+| `woo_get_tax_rate` | Get a single tax rate |
+| `woo_create_tax_rate` | Create a tax rate |
+| `woo_update_tax_rate` | Update a tax rate |
+| `woo_delete_tax_rate` | Delete a tax rate |
 | `woo_list_tax_classes` | List tax classes |
-| `woo_create_tax_class` | Create tax class |
-| `woo_delete_tax_class` | Delete tax class |
+| `woo_create_tax_class` | Create a tax class |
+| `woo_delete_tax_class` | Delete a tax class |
 
-### Webhooks (5)
-
-| Tool | Description |
-|------|-------------|
-| `woo_list_webhooks` | List webhooks |
-| `woo_get_webhook` | Get webhook |
-| `woo_create_webhook` | Create webhook (order.created, product.updated, etc.) |
-| `woo_update_webhook` | Update webhook |
-| `woo_delete_webhook` | Delete webhook |
-
-### Reports (3)
+### Shipping (6 tools)
 
 | Tool | Description |
 |------|-------------|
-| `woo_get_reports_sales` | Sales analytics |
-| `woo_get_reports_top_sellers` | Top-selling products |
-| `woo_get_reports_totals` | Totals for coupons/customers/orders/products/reviews |
+| `woo_list_shipping_zones` | List all shipping zones |
+| `woo_list_shipping_classes` | List shipping classes |
+| `woo_get_shipping_class` | Get a single shipping class |
+| `woo_create_shipping_class` | Create a shipping class |
+| `woo_update_shipping_class` | Update a shipping class |
+| `woo_delete_shipping_class` | Delete a shipping class |
 
-### Settings & Payments (5)
+### Webhooks (5 tools)
 
 | Tool | Description |
 |------|-------------|
-| `woo_list_shipping_zones` | List shipping zones |
-| `woo_get_payment_gateways` | List payment gateways |
-| `woo_update_payment_gateway` | Enable/disable/configure gateway |
+| `woo_list_webhooks` | List all webhooks |
+| `woo_get_webhook` | Get a single webhook |
+| `woo_create_webhook` | Create a webhook |
+| `woo_update_webhook` | Update a webhook |
+| `woo_delete_webhook` | Delete a webhook |
+
+### Reports (3 tools)
+
+| Tool | Description |
+|------|-------------|
+| `woo_get_reports_sales` | Get sales reports |
+| `woo_get_reports_top_sellers` | Get top-selling products |
+| `woo_get_reports_totals` | Get report totals (orders, products, customers) |
+
+### Settings & System (10 tools)
+
+| Tool | Description |
+|------|-------------|
 | `woo_get_settings` | Get store settings by group |
-| `woo_update_setting` | Update a setting value |
-
-### System Status & Data (6)
-
-| Tool | Description |
-|------|-------------|
-| `woo_get_system_status` | Full system diagnostics |
+| `woo_update_setting` | Update a store setting |
+| `woo_get_payment_gateways` | List payment gateways |
+| `woo_update_payment_gateway` | Update a payment gateway |
+| `woo_get_system_status` | Get system status info |
 | `woo_list_system_tools` | List available system tools |
-| `woo_run_system_tool` | Run system tool (clear transients, etc.) |
-| `woo_list_data` | List continents/countries/currencies |
-| `woo_get_data_item` | Get specific continent/country/currency |
-| `woo_get_current_currency` | Get store's current currency |
+| `woo_run_system_tool` | Run a system tool |
+| `woo_list_data` | List data endpoints |
+| `woo_get_data_item` | Get a data item |
+| `woo_get_current_currency` | Get the store's current currency |
 
-### Batch Operations (1)
+### Batch & Workflows (4 tools)
 
 | Tool | Description |
 |------|-------------|
-| `woo_batch_update` | Batch create/update/delete (100 ops max) |
+| `woo_batch_update` | Batch create, update, or delete resources |
+| `woo_store_dashboard` | Get a complete store overview (orders, revenue, products) |
+| `woo_create_full_product` | Create a product with all details in one call |
+| `woo_process_order` | Process order workflow (fulfill, complete, etc.) |
 
-Supports: products, orders, coupons, customers, categories, tags, attributes, reviews, taxes, webhooks, shipping classes.
+## Examples
+
+```
+You: "Show me my store dashboard"
+AI: Uses woo_store_dashboard to get an overview of recent orders, revenue, and inventory.
+
+You: "Create a new T-shirt product with sizes S, M, L"
+AI: Uses woo_create_full_product to create the product with variations for each size.
+
+You: "List all pending orders"
+AI: Uses woo_list_orders with status filter set to "pending".
+```
+
+## Development
+
+```bash
+# Build
+npx turbo build --filter=@cmsmcp/woocommerce
+
+# Test
+npx turbo test --filter=@cmsmcp/woocommerce
+
+# Dev mode
+npx turbo dev --filter=@cmsmcp/woocommerce
+
+# Test with MCP Inspector
+npx @modelcontextprotocol/inspector node packages/woocommerce-mcp/dist/index.js
+```
 
 ## License
 
