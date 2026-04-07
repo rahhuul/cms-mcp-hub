@@ -13,7 +13,6 @@
   <a href="https://www.npmjs.com/package/@cmsmcp/wordpress"><img src="https://img.shields.io/npm/v/@cmsmcp/wordpress.svg?label=wordpress" alt="npm wordpress"></a>
   <a href="https://www.npmjs.com/package/@cmsmcp/shopify"><img src="https://img.shields.io/npm/v/@cmsmcp/shopify.svg?label=shopify" alt="npm shopify"></a>
   <a href="https://www.npmjs.com/package/@cmsmcp/woocommerce"><img src="https://img.shields.io/npm/v/@cmsmcp/woocommerce.svg?label=woocommerce" alt="npm woocommerce"></a>
-  <a href="https://github.com/rahhuul/cms-mcp-hub/stargazers"><img src="https://img.shields.io/github/stars/rahhuul/cms-mcp-hub?style=social" alt="GitHub Stars"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a>
   <a href="#packages"><img src="https://img.shields.io/badge/Tools-589-blue.svg" alt="589 Tools"></a>
   <a href="#packages"><img src="https://img.shields.io/badge/Platforms-12-orange.svg" alt="12 Platforms"></a>
@@ -357,11 +356,7 @@ SANITY_DATASET=production                    # Optional, defaults to production
 
 ## Like This Project?
 
-If CMS MCP Hub is useful to you, please consider giving it a star on GitHub. It helps others discover the project and motivates continued development.
-
-<p align="center">
-  <a href="https://github.com/rahhuul/cms-mcp-hub/stargazers"><img src="https://img.shields.io/github/stars/rahhuul/cms-mcp-hub?style=for-the-badge&logo=github&label=Star%20on%20GitHub" alt="Star on GitHub"></a>
-</p>
+If CMS MCP Hub is useful to you, please consider giving it a **[star on GitHub](https://github.com/rahhuul/cms-mcp-hub)**. It helps others discover the project and motivates continued development.
 
 You can also help by:
 - Sharing this project with developers who work with CMS platforms
