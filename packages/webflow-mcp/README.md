@@ -2,6 +2,8 @@
 
 MCP server for Webflow -- 21 tools for managing sites, CMS collections, items, pages, e-commerce products, orders, publishing, and webhooks.
 
+> Part of [CMS MCP Hub](https://github.com/rahhuul/cms-mcp-hub) -- 589 tools across 12 CMS platforms. If this is useful, [give it a star](https://github.com/rahhuul/cms-mcp-hub/stargazers)!
+
 [![npm version](https://img.shields.io/npm/v/@cmsmcp/webflow.svg)](https://www.npmjs.com/package/@cmsmcp/webflow)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)
 

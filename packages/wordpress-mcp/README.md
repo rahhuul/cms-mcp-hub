@@ -1,6 +1,8 @@
 # @cmsmcp/wordpress
 
-MCP server for WordPress -- 165 tools for full REST API v2 coverage including posts, pages, media, menus, block editor, site editor, templates, fonts, users, widgets, plugins, taxonomy, and more. No WordPress plugin required.
+MCP server for WordPress -- 169 tools for full REST API v2 coverage including posts, pages, media, menus, block editor, site editor, templates, fonts, users, widgets, plugins, taxonomy, and more. No WordPress plugin required.
+
+> Part of [CMS MCP Hub](https://github.com/rahhuul/cms-mcp-hub) -- 589 tools across 12 CMS platforms. If this is useful, [give it a star](https://github.com/rahhuul/cms-mcp-hub/stargazers)!
 
 [![npm version](https://img.shields.io/npm/v/@cmsmcp/wordpress.svg)](https://www.npmjs.com/package/@cmsmcp/wordpress)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)
@@ -45,7 +47,7 @@ Same JSON config format -- add to your client's MCP settings file.
 | `WORDPRESS_USERNAME` | Yes | WordPress username |
 | `WORDPRESS_APP_PASSWORD` | Yes | WordPress application password (generate in WP Admin > Users > Application Passwords) |
 
-## Available Tools (165 tools)
+## Available Tools (169 tools)
 
 ### Posts (5 tools)
 

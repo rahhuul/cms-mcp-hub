@@ -2,6 +2,8 @@
 
 MCP server for Contentful -- 20 tools for managing content types, entries, assets, environments, locales, tags, and bulk operations via the Content Management API.
 
+> Part of [CMS MCP Hub](https://github.com/rahhuul/cms-mcp-hub) -- 589 tools across 12 CMS platforms. If this is useful, [give it a star](https://github.com/rahhuul/cms-mcp-hub/stargazers)!
+
 [![npm version](https://img.shields.io/npm/v/@cmsmcp/contentful.svg)](https://www.npmjs.com/package/@cmsmcp/contentful)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)
 
