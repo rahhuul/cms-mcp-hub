@@ -40,6 +40,20 @@ export class WpClient {
     );
   }
 
+  /**
+   * Returns the base WordPress site URL (without /wp-json/wp/v2).
+   */
+  getSiteUrl(): string {
+    return this.baseUrl.replace(/\/wp-json\/wp\/v2$/, "");
+  }
+
+  /**
+   * Returns the Basic Auth header value used by this client.
+   */
+  getAuthHeader(): string {
+    return this.authHeader;
+  }
+
   async get<T>(path: string, params?: Record<string, string | number | boolean | undefined>): Promise<T> {
     return this.api.get<T>(path, params);
   }

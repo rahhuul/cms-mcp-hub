@@ -1,8 +1,8 @@
 # @cmsmcp/wordpress
 
-MCP server for WordPress -- 169 tools for full REST API v2 coverage including posts, pages, media, menus, block editor, site editor, templates, fonts, users, widgets, plugins, taxonomy, and more. No WordPress plugin required.
+MCP server for WordPress — **337 tools** for complete WordPress management: content, media, blocks, themes, plugins, SEO analysis, page builders (Elementor, Bricks, Divi), ACF deep integration, WP-CLI bridge, staging workflows, multisite networks, security audits, database tools, and more.
 
-> Part of [CMS MCP Hub](https://github.com/rahhuul/cms-mcp-hub) -- 589 tools across 12 CMS platforms. If this is useful, [give it a star](https://github.com/rahhuul/cms-mcp-hub/stargazers)!
+> Part of [CMS MCP Hub](https://github.com/rahhuul/cms-mcp-hub) — 757 tools across 12 CMS platforms. If this is useful, [give it a star](https://github.com/rahhuul/cms-mcp-hub/stargazers)!
 
 [![npm version](https://img.shields.io/npm/v/@cmsmcp/wordpress.svg)](https://www.npmjs.com/package/@cmsmcp/wordpress)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)
@@ -37,17 +37,45 @@ claude mcp add wordpress -e WORDPRESS_URL=https://mysite.com -e WORDPRESS_USERNA
 
 ### Cursor / Windsurf / Any MCP Client
 
-Same JSON config format -- add to your client's MCP settings file.
+Same JSON config format — add to your client's MCP settings file.
 
 ## Configuration
+
+### Single Site (Basic)
 
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `WORDPRESS_URL` | Yes | Your WordPress site URL |
 | `WORDPRESS_USERNAME` | Yes | WordPress username |
-| `WORDPRESS_APP_PASSWORD` | Yes | WordPress application password (generate in WP Admin > Users > Application Passwords) |
+| `WORDPRESS_APP_PASSWORD` | Yes | WordPress application password (generate in WP Admin → Users → Application Passwords) |
 
-## Available Tools (169 tools)
+### Multi-Site & Advanced
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `CMSMCP_CONFIG_B64` | No | Base64-encoded JSON config for multi-site setup |
+| `CMSMCP_CONFIG_FILE` | No | Path to a JSON config file for multi-site setup |
+| `CMSMCP_SITES` | No | Comma-separated hostnames to filter which sites are active |
+| `WORDPRESS_ENABLED_TOOLS` | No | Comma-separated list of tool names to enable (allowlist) |
+| `WP_WEBHOOK_PORT` | No | Webhook server port (default: 9456) |
+
+### CMS MCP Hub Plugin (Optional — unlocks 100+ extra tools)
+
+Install the companion WordPress plugin to unlock plugin-dependent tools (WP-CLI bridge, database tools, cron management, activity log, staging workflows, Bricks builder, and more):
+
+```json
+{
+  "env": {
+    "WORDPRESS_URL": "https://mysite.com",
+    "WORDPRESS_USERNAME": "admin",
+    "WORDPRESS_APP_PASSWORD": "xxxx xxxx xxxx",
+    "CMSMCP_PLUGIN_URL": "https://mysite.com/wp-json/cmsmcp/v1",
+    "CMSMCP_PLUGIN_SECRET": "your-plugin-secret"
+  }
+}
+```
+
+## Available Tools (337 tools)
 
 ### Posts (5 tools)
 
@@ -73,10 +101,11 @@ Same JSON config format -- add to your client's MCP settings file.
 
 | Tool | Description |
 |------|-------------|
-| `wp_list_media` | List media files |
-| `wp_get_media` | Get a single media item |
-| `wp_update_media` | Update media metadata |
-| `wp_delete_media` | Delete a media item |
+| `wp_list_media` | List media library items with type and search filters |
+| `wp_get_media` | Get a single media item by ID |
+| `wp_upload_media` | Upload a new media file |
+| `wp_update_media` | Update media metadata (title, caption, alt text) |
+| `wp_delete_media` | Permanently delete a media item |
 
 ### Comments (5 tools)
 
@@ -252,32 +281,6 @@ Same JSON config format -- add to your client's MCP settings file.
 | `wp_update_custom_post` | Update a custom post |
 | `wp_delete_custom_post` | Delete a custom post |
 
-### Admin & Plugins (11 tools)
-
-| Tool | Description |
-|------|-------------|
-| `wp_list_plugins` | List installed plugins |
-| `wp_get_plugin` | Get a single plugin |
-| `wp_update_plugin` | Activate/deactivate a plugin |
-| `wp_delete_plugin` | Delete a plugin |
-| `wp_install_plugin` | Install a plugin from the directory |
-| `wp_list_themes` | List installed themes |
-| `wp_get_theme` | Get a single theme |
-| `wp_get_settings` | Get site settings |
-| `wp_update_settings` | Update site settings |
-| `wp_search` | Search across all content types |
-| `wp_get_site_health` | Get site health status |
-
-### Plugins - Yoast SEO (5 tools)
-
-| Tool | Description |
-|------|-------------|
-| `wp_get_yoast_seo` | Get Yoast SEO data for a post/page |
-| `wp_update_yoast_seo` | Update Yoast SEO data for a post/page |
-| `wp_get_acf_fields` | Get ACF custom fields for a post/page |
-| `wp_update_acf_fields` | Update ACF custom fields |
-| `wp_list_acf_field_groups` | List ACF field groups |
-
 ### Widgets (10 tools)
 
 | Tool | Description |
@@ -293,6 +296,28 @@ Same JSON config format -- add to your client's MCP settings file.
 | `wp_list_widget_types` | List available widget types |
 | `wp_get_widget_type` | Get a widget type definition |
 
+### Widget Shortcuts (15 tools)
+
+Shorthand tools for quickly adding common block types without full Gutenberg syntax.
+
+| Tool | Description |
+|------|-------------|
+| `wp_add_heading` | Add a heading block |
+| `wp_add_paragraph` | Add a paragraph block |
+| `wp_add_image` | Add an image block |
+| `wp_add_button` | Add a button block |
+| `wp_add_list` | Add a list block |
+| `wp_add_quote` | Add a blockquote |
+| `wp_add_code` | Add a code block |
+| `wp_add_table` | Add a table block |
+| `wp_add_separator` | Add a separator block |
+| `wp_add_spacer` | Add a spacer block |
+| `wp_add_columns` | Add a columns block |
+| `wp_add_gallery` | Add a gallery block |
+| `wp_add_video` | Add a video block |
+| `wp_add_embed` | Add an embed block |
+| `wp_add_html` | Add a custom HTML block |
+
 ### Statuses & Directories (4 tools)
 
 | Tool | Description |
@@ -301,6 +326,30 @@ Same JSON config format -- add to your client's MCP settings file.
 | `wp_get_post_status` | Get a single post status |
 | `wp_search_block_directory` | Search the block directory |
 | `wp_search_pattern_directory` | Search the pattern directory |
+
+### Admin & Plugins (9 tools)
+
+| Tool | Description |
+|------|-------------|
+| `wp_list_plugins` | List installed plugins |
+| `wp_get_plugin` | Get a single plugin |
+| `wp_update_plugin` | Activate/deactivate a plugin |
+| `wp_delete_plugin` | Delete a plugin |
+| `wp_install_plugin` | Install a plugin from the directory |
+| `wp_get_settings` | Get site settings |
+| `wp_update_settings` | Update site settings |
+| `wp_search` | Search across all content types |
+| `wp_get_site_health` | Get site health status |
+
+### Plugins — Yoast SEO & ACF (Basic) (5 tools)
+
+| Tool | Description |
+|------|-------------|
+| `wp_get_yoast_seo` | Get Yoast SEO data for a post/page |
+| `wp_update_yoast_seo` | Update Yoast SEO data for a post/page |
+| `wp_get_acf_fields` | Get ACF custom fields for a post/page |
+| `wp_update_acf_fields` | Update ACF custom fields |
+| `wp_list_acf_field_groups` | List ACF field groups |
 
 ### Workflows (6 tools)
 
@@ -313,6 +362,320 @@ Same JSON config format -- add to your client's MCP settings file.
 | `wp_site_audit` | Run a comprehensive site audit |
 | `wp_setup_menu` | Set up a complete navigation menu |
 
+### Advanced Content (5 tools)
+
+| Tool | Description |
+|------|-------------|
+| `wp_schedule_post` | Schedule a post for future publishing |
+| `wp_moderate_comments` | Bulk moderate comments (approve, spam, trash) |
+| `wp_get_content_stats` | Get word count, reading time, headings, block analysis |
+| `wp_find_content` | Advanced search across multiple content types |
+| `wp_get_preview_url` | Generate a preview URL for a draft/pending post |
+
+### Analysis — Content (4 tools)
+
+| Tool | Description |
+|------|-------------|
+| `wp_analyze_readability` | Flesch Reading Ease, grade level, passive voice analysis |
+| `wp_analyze_content_quality` | Quality score (0–100), structure ratings, recommendations |
+| `wp_content_calendar` | Editorial calendar view of scheduled/draft/recent content |
+| `wp_find_thin_content` | Find posts below word-count threshold or missing key elements |
+
+### Analysis — Links & Images (3 tools)
+
+| Tool | Description |
+|------|-------------|
+| `wp_check_broken_links` | Scan posts/pages for broken links and redirects |
+| `wp_analyze_images` | Audit images for alt text, format, lazy loading, SEO (0–100 score) |
+| `wp_check_structured_data` | Detect and validate JSON-LD Schema.org markup |
+
+### Analysis — SEO (3 tools)
+
+| Tool | Description |
+|------|-------------|
+| `wp_analyze_seo` | Comprehensive SEO audit: title, meta, headings, links, word count |
+| `wp_get_rankmath_score` | Get RankMath SEO score (requires RankMath plugin) |
+| `wp_get_seo_overview` | Site-wide SEO snapshot across recent posts/pages |
+
+### Page Builder Integration (3 tools)
+
+| Tool | Description |
+|------|-------------|
+| `wp_build_page` | Create a complete page from a declarative block structure |
+| `wp_convert_html_to_blocks` | Convert raw HTML to Gutenberg block markup |
+| `wp_get_page_structure` | Analyze a page's Gutenberg block hierarchy |
+
+### Builder Tools — Elementor / Divi / Beaver (9 tools)
+
+Requires the CMS MCP Hub companion plugin.
+
+| Tool | Description |
+|------|-------------|
+| `wp_get_plugin_status` | Check companion plugin status and active builders |
+| `wp_detect_active_builders` | Detect all active page builders (Elementor, Divi, Bricks, etc.) |
+| `wp_get_builder_content` | Extract native builder JSON from a page |
+| `wp_set_builder_content` | Inject builder-native JSON content into a page |
+| `wp_find_elements` | Find elements by type, class, text, or ID |
+| `wp_update_element` | Update an element's settings/styles |
+| `wp_move_element` | Move an element to a different position |
+| `wp_duplicate_element` | Clone an element in a page |
+| `wp_remove_element` | Remove an element and its children |
+
+### Builder Shortcuts — Universal (12 tools)
+
+Builder-aware shortcuts that translate to the active builder's native format (Elementor, Divi, Bricks, etc.). Requires the companion plugin.
+
+| Tool | Description |
+|------|-------------|
+| `wp_builder_add_heading` | Add a heading widget via the active builder |
+| `wp_builder_add_text` | Add a text/paragraph widget |
+| `wp_builder_add_image` | Add an image widget |
+| `wp_builder_add_button` | Add a button widget |
+| `wp_builder_add_video` | Add a video embed widget |
+| `wp_builder_add_section` | Add a section/container |
+| `wp_builder_add_divider` | Add a divider/separator |
+| `wp_builder_add_spacer` | Add vertical space |
+| `wp_builder_add_icon` | Add an icon widget |
+| `wp_builder_add_form` | Add a contact form widget |
+| `wp_builder_add_slider` | Add an image slider |
+| `wp_builder_add_gallery` | Add an image gallery |
+
+### Bricks Page Builder (17 tools)
+
+Deep Bricks Builder integration. Requires Bricks theme and the companion plugin.
+
+| Tool | Description |
+|------|-------------|
+| `wp_bricks_list_global_classes` | List all Bricks global CSS classes |
+| `wp_bricks_create_global_class` | Create a new global CSS class |
+| `wp_bricks_update_global_class` | Update a global CSS class |
+| `wp_bricks_delete_global_class` | Delete a global CSS class |
+| `wp_bricks_get_theme_styles` | Get Bricks theme styles (colors, typography, spacing) |
+| `wp_bricks_update_theme_styles` | Update Bricks theme styles |
+| `wp_bricks_get_color_palette` | Get the Bricks color palette |
+| `wp_bricks_update_color_palette` | Update the Bricks color palette |
+| `wp_bricks_get_typography` | Get Bricks typography settings |
+| `wp_bricks_update_typography` | Update Bricks typography settings |
+| `wp_bricks_list_components` | List saved Bricks components/templates |
+| `wp_bricks_get_component` | Get a Bricks component by ID |
+| `wp_bricks_apply_component` | Apply a component to a page element |
+| `wp_bricks_search_elements` | Search elements in a page by type or attribute |
+| `wp_bricks_health_check` | Check Bricks installation health |
+| `wp_bricks_style_profile` | Get a page's style usage profile |
+| `wp_bricks_design_system` | Export the full Bricks design system |
+
+### Bulk Operations (6 tools)
+
+| Tool | Description |
+|------|-------------|
+| `wp_bulk_find_replace` | Find/replace text across multiple posts (dry_run=true by default) |
+| `wp_bulk_update_meta` | Batch update post meta across multiple posts |
+| `wp_bulk_manage_media` | Batch update media metadata; fix missing alt text |
+| `wp_bulk_change_status` | Change status of multiple posts at once |
+| `wp_bulk_assign_terms` | Batch assign categories/tags to multiple posts |
+| `wp_bulk_delete` | Delete multiple posts/pages at once |
+
+### Snapshots & Backup (6 tools)
+
+| Tool | Description |
+|------|-------------|
+| `wp_list_snapshots` | List all content snapshots |
+| `wp_get_snapshot` | Get a specific snapshot |
+| `wp_diff_content` | Compare two snapshots or a snapshot vs. live content |
+| `wp_restore_snapshot` | Restore content from a snapshot |
+| `wp_create_backup` | Create a full site backup snapshot |
+| `wp_safe_update` | Update content with automatic rollback on error |
+
+### Plugin Snapshots (4 tools)
+
+| Tool | Description |
+|------|-------------|
+| `wp_plugin_create_snapshot` | Snapshot the current plugin list and versions |
+| `wp_plugin_list_snapshots` | List all plugin snapshots |
+| `wp_plugin_restore_snapshot` | Restore plugins to a previous snapshot state |
+| `wp_plugin_diff_snapshots` | Compare two plugin snapshots |
+
+### Plugin Analysis (3 tools)
+
+| Tool | Description |
+|------|-------------|
+| `wp_deep_seo_audit` | Deep multi-plugin SEO audit (Yoast + RankMath + raw meta) |
+| `wp_scan_accessibility` | Scan content for WCAG accessibility issues |
+| `wp_analyze_performance` | Analyze page performance metrics and bottlenecks |
+
+### Multi-Site Manager (3 tools)
+
+| Tool | Description |
+|------|-------------|
+| `wp_list_sites` | List configured WordPress sites |
+| `wp_switch_site` | Switch the active site for subsequent requests |
+| `wp_get_active_site` | Get the currently active site configuration |
+
+### Stock Images (4 tools)
+
+| Tool | Description |
+|------|-------------|
+| `wp_search_stock_images` | Search Openverse for free stock images |
+| `wp_sideload_image` | Sideload an image URL into the WP media library |
+| `wp_search_and_sideload` | Search + automatically sideload the best match |
+| `wp_get_stock_image_details` | Get full details of a stock image by ID |
+
+### ACF Deep Integration (10 tools)
+
+Requires Advanced Custom Fields (ACF) plugin.
+
+| Tool | Description |
+|------|-------------|
+| `wp_acf_list_field_groups` | List all ACF field groups with fields, location rules, and status |
+| `wp_acf_get_field_group` | Get a specific ACF field group definition |
+| `wp_acf_get_post_fields` | Get all ACF field values for a post/page |
+| `wp_acf_update_post_fields` | Update ACF field values on a post/page |
+| `wp_acf_list_options` | List all ACF options page fields (ACF Pro) |
+| `wp_acf_update_options` | Update ACF options page fields (ACF Pro) |
+| `wp_acf_get_repeater` | Get ACF repeater field rows with sub-field values |
+| `wp_acf_get_flexible_content` | Get ACF flexible content layout blocks |
+| `wp_acf_clone_field_values` | Copy ACF fields from one post to another |
+| `wp_acf_search_by_field` | Search posts by ACF field value using meta queries |
+
+### WP-CLI Bridge (6 tools)
+
+Requires WP-CLI installed on the server and the companion plugin.
+
+| Tool | Description |
+|------|-------------|
+| `wp_cli_run` | Execute a WP-CLI command on the server |
+| `wp_cli_export` | Export content via WP-CLI (wp export → WXR) |
+| `wp_cli_import` | Import WXR content via WP-CLI |
+| `wp_cli_search_replace` | Database search-replace via WP-CLI (dry_run=true by default) |
+| `wp_cli_maintenance_mode` | Toggle WordPress maintenance mode |
+| `wp_cli_cache_flush` | Flush WordPress object cache |
+
+### Staging & Migration (6 tools)
+
+Requires 2+ sites configured (use `CMSMCP_CONFIG_B64` or `CMSMCP_CONFIG_FILE`).
+
+| Tool | Description |
+|------|-------------|
+| `wp_staging_push_content` | Push a post/page from active site to another site |
+| `wp_staging_pull_content` | Pull a post/page from another site to active site |
+| `wp_staging_compare_content` | Compare a post between two configured sites |
+| `wp_staging_sync_taxonomies` | Sync categories/tags between two sites |
+| `wp_staging_sync_media` | Copy media attachments between sites |
+| `wp_staging_list_differences` | List all posts/pages that differ between two sites |
+
+### Activity Log (5 tools)
+
+Requires the companion plugin with activity logging enabled.
+
+| Tool | Description |
+|------|-------------|
+| `wp_activity_list` | List recent activity log entries with filters |
+| `wp_activity_get` | Get detailed info about a specific activity entry |
+| `wp_activity_undo` | Undo an activity by restoring the previous state |
+| `wp_activity_stats` | Activity statistics by user, resource, and time period |
+| `wp_activity_export` | Export activity log as JSON for a date range |
+
+### Settings & Options (7 tools)
+
+| Tool | Description |
+|------|-------------|
+| `wp_get_settings` | Get WordPress site settings (general, writing, reading, etc.) |
+| `wp_update_settings` | Update WordPress settings via REST API |
+| `wp_get_option` | Get a specific wp_options entry by name |
+| `wp_update_option` | Update a specific wp_options entry |
+| `wp_list_transients` | List WordPress transients (cached data in wp_options) |
+| `wp_delete_transient` | Delete a transient or clear all expired transients |
+| `wp_get_site_health` | Get Site Health status and recommendations |
+
+### Comment Moderation (4 tools)
+
+| Tool | Description |
+|------|-------------|
+| `wp_comment_bulk_moderate` | Bulk approve/spam/trash comments by IDs or filters |
+| `wp_comment_get_stats` | Comment statistics: total, approved, pending, spam |
+| `wp_comment_find_spam_patterns` | Analyze comments for spam patterns and suspicious content |
+| `wp_comment_auto_moderate` | Apply moderation rules to pending comments (dry_run=true by default) |
+
+### WP-Cron (5 tools)
+
+Requires the companion plugin.
+
+| Tool | Description |
+|------|-------------|
+| `wp_cron_list_events` | List all scheduled WP-Cron events with next run time |
+| `wp_cron_get_schedules` | List all cron schedules (hourly, daily, custom, etc.) |
+| `wp_cron_run_event` | Manually trigger a scheduled cron event |
+| `wp_cron_delete_event` | Remove a scheduled cron event |
+| `wp_cron_check_status` | Check if WP-Cron is working and report overdue events |
+
+### Database Tools (5 tools)
+
+Requires the companion plugin.
+
+| Tool | Description |
+|------|-------------|
+| `wp_db_get_sizes` | Get table sizes, row counts, and total DB size |
+| `wp_db_optimize_tables` | Run OPTIMIZE TABLE on WordPress database tables |
+| `wp_db_cleanup_revisions` | Delete excess revisions, keeping N most recent per post |
+| `wp_db_cleanup_transients` | Delete all expired transients from the database |
+| `wp_db_get_info` | Get DB server info (MySQL version, charset, collation) |
+
+### Email Tools (4 tools)
+
+| Tool | Description |
+|------|-------------|
+| `wp_email_test` | Send a test email to verify delivery is working |
+| `wp_email_get_log` | Get recent email log entries (requires SMTP plugin with logging) |
+| `wp_email_get_config` | Get current email/SMTP configuration |
+| `wp_email_check_deliverability` | Check DNS records (MX, SPF, DKIM, DMARC) for deliverability |
+
+### Security (3 tools)
+
+| Tool | Description |
+|------|-------------|
+| `wp_security_audit` | Comprehensive security audit: versions, users, SSL, REST API exposure |
+| `wp_check_file_permissions` | Check for dangerous file permission issues |
+| `wp_validate_content_security` | Scan post content for XSS vectors and unsafe code |
+
+### Themes & Customizer (8 tools)
+
+| Tool | Description |
+|------|-------------|
+| `wp_list_themes` | List all installed themes with status and version |
+| `wp_get_theme` | Get detailed theme info by stylesheet slug |
+| `wp_activate_theme` | Switch to a different installed theme |
+| `wp_get_theme_mods` | Get all Customizer settings for the active theme |
+| `wp_update_theme_mod` | Update a single Customizer setting |
+| `wp_export_customizer` | Export all Customizer settings as JSON |
+| `wp_import_customizer` | Import Customizer settings from JSON |
+| `wp_get_theme_support` | Get the list of features supported by the active theme |
+
+### Multisite Network (8 tools)
+
+Requires WordPress Multisite installation.
+
+| Tool | Description |
+|------|-------------|
+| `wp_multisite_list_sites` | List all sites in the multisite network |
+| `wp_multisite_get_site` | Get details about a specific network site |
+| `wp_multisite_create_site` | Create a new site in the network |
+| `wp_multisite_update_site` | Update a network site (title, status, visibility) |
+| `wp_multisite_delete_site` | Delete or archive a network site (confirm=true required) |
+| `wp_multisite_list_network_plugins` | List network-activated plugins |
+| `wp_multisite_list_network_themes` | List network-enabled themes |
+| `wp_multisite_get_network_settings` | Get network-wide settings and limits |
+
+### Advanced Media (6 tools)
+
+| Tool | Description |
+|------|-------------|
+| `wp_media_optimize_audit` | Audit media library: missing alt text, oversized images, unused files |
+| `wp_media_regenerate_thumbnails` | Regenerate thumbnails for one or more media items |
+| `wp_media_bulk_alt_text` | Set alt text on multiple media items at once |
+| `wp_media_find_unused` | Find media not attached to any post or page |
+| `wp_media_get_sizes` | Get all registered image sizes on the site |
+| `wp_media_replace` | Replace a media file while keeping the same attachment ID |
+
 ## Examples
 
 ```
@@ -320,18 +683,26 @@ You: "List all my published posts"
 AI: Uses wp_list_posts with status filter set to "publish".
 
 You: "Create a landing page with hero, features, and pricing sections"
-AI: Uses wp_component_hero, wp_component_features, and wp_component_pricing
-    to generate block content, then wp_create_full_page to assemble the page.
+AI: Uses wp_component_hero, wp_component_features, and wp_component_pricing,
+    then wp_create_full_page to assemble the page.
 
-You: "Install and activate the WooCommerce plugin"
-AI: Uses wp_install_plugin to install WooCommerce from the directory,
-    then wp_update_plugin to activate it.
+You: "Run a security audit on my site"
+AI: Uses wp_security_audit for a full read-only security check.
 
-You: "Set up my main navigation menu"
-AI: Uses wp_setup_menu to create a complete navigation with menu items.
+You: "Find all posts with broken links"
+AI: Uses wp_list_posts to get post IDs, then wp_check_broken_links on each.
 
-You: "Run a site audit"
-AI: Uses wp_site_audit to check site health, plugins, themes, and configuration.
+You: "Push my staging post to production"
+AI: Uses wp_staging_push_content to copy the post between configured sites.
+
+You: "Show me this month's editorial calendar"
+AI: Uses wp_content_calendar to display scheduled, recent, and draft content.
+
+You: "Clean up the database — remove old revisions and expired transients"
+AI: Uses wp_db_cleanup_revisions and wp_db_cleanup_transients.
+
+You: "Scan ACF field group 'Team Members' and copy values to a new post"
+AI: Uses wp_acf_get_field_group, wp_acf_get_post_fields, then wp_acf_clone_field_values.
 ```
 
 ## Development
