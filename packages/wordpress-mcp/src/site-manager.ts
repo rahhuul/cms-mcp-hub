@@ -22,7 +22,7 @@ export class SiteManager {
     }
 
     // Determine default site
-    const defaultSite = config.sites.find((s) => s.default) ?? config.sites[0];
+    const defaultSite = config.sites.find((s) => s.default) ?? config.sites[0]!;
     this.activeSiteId = defaultSite.id;
 
     // Optional plugin-specific API key

@@ -5,7 +5,6 @@ import {
   CreatePostSchema,
   UpdatePostSchema,
   DeletePostSchema,
-  ListPagesSchema,
   CreatePageSchema,
   UpdatePageSchema,
   ListTagsSchema,

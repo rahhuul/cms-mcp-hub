@@ -248,7 +248,7 @@ export function registerWpCliTools(server: McpServer, pluginClient: PluginClient
         };
 
         const results: Record<string, unknown> = {};
-        for (const cmd of commands[type]) {
+        for (const cmd of commands[type]!) {
           results[cmd] = await pluginClient.runWpCli(cmd);
         }
 

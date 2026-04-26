@@ -91,7 +91,6 @@ export function registerSystemTools(server: McpServer, client: SanityClient): vo
       try {
         const v = UploadFileSchema.parse(p);
         const result = await client.uploadFile(
-          (client as unknown as { dataset: string }).dataset || "production",
           v.url,
           v.filename,
         );

@@ -57,11 +57,10 @@ export function registerCodeTools(server: McpServer, client: FramerClient): void
           );
         }
 
-        const versions = await framer.getCodeFileVersions(codeFileId);
+        const versions = await file.getVersions();
         let content: string | null = null;
         if (versions.length > 0) {
-          const latestVersion = versions[versions.length - 1]!;
-          content = await framer.getCodeFileVersionContent(codeFileId, latestVersion.id);
+          content = await versions[versions.length - 1]!.getContent();
         }
 
         return mcpSuccess({
@@ -111,7 +110,11 @@ export function registerCodeTools(server: McpServer, client: FramerClient): void
       try {
         const validated = UpdateCodeFileSchema.parse(params);
         const framer = await client.getConnection();
-        const file = await framer.setCodeFileContent(validated.codeFileId, validated.code);
+        const codeFile = await framer.getCodeFile(validated.codeFileId);
+        if (!codeFile) {
+          return mcpError(new Error(`Code file '${validated.codeFileId}' not found`), "framer_update_code_file");
+        }
+        const file = await codeFile.setFileContent(validated.code);
 
         return mcpSuccess({
           id: file.id,

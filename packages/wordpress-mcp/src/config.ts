@@ -30,7 +30,7 @@ export function normalizeUrl(raw: string): string {
   // Fix double protocols (e.g., https://https://site.com)
   url = url.replace(/^(https?:\/\/)+/i, (match) => {
     const protocols = match.match(/https?:\/\//gi);
-    return protocols ? protocols[protocols.length - 1] : "https://";
+    return protocols ? protocols[protocols.length - 1]! : "https://";
   });
 
   // Add https:// if no protocol
@@ -107,11 +107,11 @@ function parseConfig(raw: unknown, source: string): CmsmcpConfig {
   // Ensure exactly one default if none marked
   const defaults = sites.filter((s) => s.default);
   if (defaults.length === 0) {
-    sites[0].default = true;
+    sites[0]!.default = true;
   } else if (defaults.length > 1) {
     // Keep only the first default
     for (let i = 1; i < defaults.length; i++) {
-      defaults[i].default = false;
+      defaults[i]!.default = false;
     }
   }
 
@@ -276,12 +276,12 @@ export function removeSite(siteId: string): void {
     throw new ConfigError(`Site "${siteId}" not found in config.`);
   }
 
-  const wasDefault = config.sites[idx].default;
+  const wasDefault = config.sites[idx]!.default;
   config.sites.splice(idx, 1);
 
   // If removed site was default, make the first remaining site default
   if (wasDefault && config.sites.length > 0) {
-    config.sites[0].default = true;
+    config.sites[0]!.default = true;
   }
 
   saveConfig(config);
@@ -356,7 +356,7 @@ export function filterSitesByHostname(config: CmsmcpConfig): CmsmcpConfig {
 
   // Ensure a default exists in filtered set
   if (!filtered.some((s) => s.default) && filtered.length > 0) {
-    filtered[0].default = true;
+    filtered[0]!.default = true;
   }
 
   return { ...config, sites: filtered };

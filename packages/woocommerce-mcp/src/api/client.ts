@@ -5,7 +5,7 @@
  * retry with backoff, rate limiting, and pagination.
  */
 
-import { ApiClient, createLogger, type Logger, type PaginatedResponse } from "@cmsmcp/shared";
+import { ApiClient, createLogger, type Logger } from "@cmsmcp/shared";
 import { isHttps, basicAuthHeader, signOAuth } from "./auth.js";
 import type { WooConfig, WooBatchRequest, WooBatchResponse } from "../types/index.js";
 

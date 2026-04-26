@@ -44,7 +44,7 @@ const BRICKS_NOT_ACTIVE_MSG =
  */
 async function requireBricks(
   pluginClient: PluginClient,
-  toolName: string,
+  _toolName: string,
 ): Promise<ReturnType<typeof mcpSuccess> | null> {
   const available = await pluginClient.isAvailable();
   if (!available) {

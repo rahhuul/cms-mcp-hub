@@ -19,6 +19,25 @@ import {
   BulkUpdateSeoSchema,
 } from "../schemas/index.js";
 
+const YOAST_TEMPLATE_VARIABLES = [
+  { variable: "%%title%%",       description: "The title of the post, page, or archive" },
+  { variable: "%%sitename%%",    description: "The site name set in WordPress general settings" },
+  { variable: "%%sep%%",         description: "The separator defined in Yoast SEO settings" },
+  { variable: "%%excerpt%%",     description: "The post excerpt (auto-generated if empty)" },
+  { variable: "%%category%%",    description: "The primary category name" },
+  { variable: "%%tag%%",         description: "The primary tag name" },
+  { variable: "%%author%%",      description: "The post author display name" },
+  { variable: "%%date%%",        description: "The post publication date" },
+  { variable: "%%modified%%",    description: "The post last modified date" },
+  { variable: "%%id%%",          description: "The post or page ID" },
+  { variable: "%%name%%",        description: "The post author user_nicename" },
+  { variable: "%%pagetotal%%",   description: "The total number of pages in a paginated sequence" },
+  { variable: "%%pagenumber%%",  description: "The current page number in a paginated sequence" },
+  { variable: "%%searchphrase%%",description: "The search phrase (search results page only)" },
+  { variable: "%%term_title%%",  description: "The taxonomy term title" },
+  { variable: "%%term_description%%", description: "The taxonomy term description" },
+];
+
 /** Map post_type enum value to WP REST plural form */
 function pluralize(postType: string): string {
   return postType === "page" ? "pages" : postType === "product" ? "products" : "posts";
@@ -240,7 +259,7 @@ export function registerSystemTools(server: McpServer, client: YoastClient): voi
         const sitemaps: Array<{ loc: string; lastmod?: string }> = [];
         const locMatches = xml.matchAll(/<sitemap>\s*<loc>([^<]+)<\/loc>(?:\s*<lastmod>([^<]+)<\/lastmod>)?\s*<\/sitemap>/g);
         for (const match of locMatches) {
-          sitemaps.push({ loc: match[1], lastmod: match[2] });
+          sitemaps.push({ loc: match[1]!, lastmod: match[2] });
         }
         return mcpSuccess({
           url: `${client.getSiteUrl()}/sitemap_index.xml`,

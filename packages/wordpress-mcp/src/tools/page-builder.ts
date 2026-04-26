@@ -179,7 +179,7 @@ function splitTopLevelElements(html: string): string[] {
     // Opening tag
     const openMatch = remaining.match(/^<([a-zA-Z][a-zA-Z0-9]*)\b[^>]*>/);
     if (openMatch) {
-      const tagName = openMatch[1].toLowerCase();
+      const tagName = openMatch[1]!.toLowerCase();
       // Find the matching closing tag, accounting for nesting
       let depth = 1;
       let pos = openMatch[0].length;
@@ -243,8 +243,8 @@ function convertElementToBlock(element: string, stats: ConversionStats): string 
   // Heading: <h1>...<h6>
   const headingMatch = el.match(/^<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1>$/i);
   if (headingMatch) {
-    const level = parseInt(headingMatch[1], 10);
-    const content = headingMatch[2].trim();
+    const level = parseInt(headingMatch[1]!, 10);
+    const content = headingMatch[2]!.trim();
     stats.converted++;
     return `<!-- wp:heading {"level":${level}} -->\n<h${level} class="wp-block-heading">${content}</h${level}>\n<!-- /wp:heading -->`;
   }
@@ -252,7 +252,7 @@ function convertElementToBlock(element: string, stats: ConversionStats): string 
   // Paragraph: <p>
   const pMatch = el.match(/^<p\b[^>]*>([\s\S]*?)<\/p>$/i);
   if (pMatch) {
-    const content = pMatch[1].trim();
+    const content = pMatch[1]!.trim();
     stats.converted++;
     return `<!-- wp:paragraph -->\n<p>${content}</p>\n<!-- /wp:paragraph -->`;
   }
@@ -268,12 +268,12 @@ function convertElementToBlock(element: string, stats: ConversionStats): string 
 
   // Figure wrapping img
   const figureImgMatch = el.match(/^<figure\b[^>]*>([\s\S]*?)<\/figure>$/i);
-  if (figureImgMatch && /<img\b/i.test(figureImgMatch[1])) {
-    const inner = figureImgMatch[1];
+  if (figureImgMatch && /<img\b/i.test(figureImgMatch[1]!)) {
+    const inner = figureImgMatch[1]!;
     const src = (inner.match(/src=["']([^"']*)["']/i) || [])[1] || "";
     const alt = (inner.match(/alt=["']([^"']*)["']/i) || [])[1] || "";
     const capMatch = inner.match(/<figcaption\b[^>]*>([\s\S]*?)<\/figcaption>/i);
-    const caption = capMatch ? capMatch[1].trim() : "";
+    const caption = capMatch ? capMatch[1]!.trim() : "";
     stats.converted++;
     return `<!-- wp:image {"url":"${escapeAttr(src)}","alt":"${escapeAttr(alt)}"} -->\n<figure class="wp-block-image"><img src="${src}" alt="${alt}"/>${caption ? `<figcaption class="wp-element-caption">${caption}</figcaption>` : ""}</figure>\n<!-- /wp:image -->`;
   }
@@ -281,7 +281,7 @@ function convertElementToBlock(element: string, stats: ConversionStats): string 
   // Unordered list: <ul>
   const ulMatch = el.match(/^<ul\b[^>]*>([\s\S]*?)<\/ul>$/i);
   if (ulMatch) {
-    const items = extractListItems(ulMatch[1]);
+    const items = extractListItems(ulMatch[1]!);
     const listItems = items.map((i) => `<!-- wp:list-item -->\n<li>${i}</li>\n<!-- /wp:list-item -->`).join("\n");
     stats.converted++;
     return `<!-- wp:list -->\n<ul>${listItems}</ul>\n<!-- /wp:list -->`;
@@ -290,7 +290,7 @@ function convertElementToBlock(element: string, stats: ConversionStats): string 
   // Ordered list: <ol>
   const olMatch = el.match(/^<ol\b[^>]*>([\s\S]*?)<\/ol>$/i);
   if (olMatch) {
-    const items = extractListItems(olMatch[1]);
+    const items = extractListItems(olMatch[1]!);
     const listItems = items.map((i) => `<!-- wp:list-item -->\n<li>${i}</li>\n<!-- /wp:list-item -->`).join("\n");
     stats.converted++;
     return `<!-- wp:list {"ordered":true} -->\n<ol>${listItems}</ol>\n<!-- /wp:list -->`;
@@ -299,7 +299,7 @@ function convertElementToBlock(element: string, stats: ConversionStats): string 
   // Blockquote: <blockquote>
   const bqMatch = el.match(/^<blockquote\b[^>]*>([\s\S]*?)<\/blockquote>$/i);
   if (bqMatch) {
-    const inner = bqMatch[1].trim();
+    const inner = bqMatch[1]!.trim();
     // Extract cite if present
     const citeMatch = inner.match(/<cite\b[^>]*>([\s\S]*?)<\/cite>/i);
     let text = inner;
@@ -309,16 +309,16 @@ function convertElementToBlock(element: string, stats: ConversionStats): string 
     // Strip <p> wrappers in blockquote
     text = text.replace(/^<p\b[^>]*>([\s\S]*?)<\/p>$/i, "$1").trim();
     stats.converted++;
-    return `<!-- wp:quote -->\n<blockquote class="wp-block-quote"><p>${text}</p>${citeMatch ? `<cite>${citeMatch[1].trim()}</cite>` : ""}</blockquote>\n<!-- /wp:quote -->`;
+    return `<!-- wp:quote -->\n<blockquote class="wp-block-quote"><p>${text}</p>${citeMatch ? `<cite>${citeMatch[1]!.trim()}</cite>` : ""}</blockquote>\n<!-- /wp:quote -->`;
   }
 
   // Code: <pre> or <code>
   const preMatch = el.match(/^<pre\b[^>]*>([\s\S]*?)<\/pre>$/i);
   if (preMatch) {
-    let codeContent = preMatch[1].trim();
+    let codeContent = preMatch[1]!.trim();
     // Strip inner <code> wrapper if present
     const innerCode = codeContent.match(/^<code\b[^>]*>([\s\S]*?)<\/code>$/i);
-    if (innerCode) codeContent = innerCode[1];
+    if (innerCode) codeContent = innerCode[1]!;
     stats.converted++;
     return `<!-- wp:code -->\n<pre class="wp-block-code"><code>${codeContent}</code></pre>\n<!-- /wp:code -->`;
   }
@@ -354,7 +354,7 @@ function convertElementToBlock(element: string, stats: ConversionStats): string 
   const buttonMatch = el.match(/^<a\b[^>]*class=["'][^"']*\b(?:button|btn)\b[^"']*["'][^>]*>([\s\S]*?)<\/a>$/i);
   if (buttonMatch) {
     const href = (el.match(/href=["']([^"']*)["']/i) || [])[1] || "#";
-    const text = buttonMatch[1].trim();
+    const text = buttonMatch[1]!.trim();
     stats.converted++;
     return `<!-- wp:buttons -->\n<div class="wp-block-buttons"><!-- wp:button -->\n<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="${href}">${text}</a></div>\n<!-- /wp:button --></div>\n<!-- /wp:buttons -->`;
   }
@@ -362,7 +362,7 @@ function convertElementToBlock(element: string, stats: ConversionStats): string 
   // Div/section with children → group
   const divMatch = el.match(/^<(div|section|article|main|header|footer)\b[^>]*>([\s\S]*?)<\/\1>$/i);
   if (divMatch) {
-    const innerHtml = divMatch[2].trim();
+    const innerHtml = divMatch[2]!.trim();
     if (innerHtml) {
       const childElements = splitTopLevelElements(innerHtml);
       const childBlocks = childElements
@@ -396,7 +396,7 @@ function extractListItems(listInnerHtml: string): string[] {
   const regex = /<li\b[^>]*>([\s\S]*?)<\/li>/gi;
   let match: RegExpExecArray | null;
   while ((match = regex.exec(listInnerHtml)) !== null) {
-    items.push(match[1].trim());
+    items.push(match[1]!.trim());
   }
   return items;
 }
@@ -432,7 +432,7 @@ function parseBlockStructure(content: string): ParsedBlock[] {
   let match: RegExpExecArray | null;
 
   while ((match = blockRegex.exec(content)) !== null) {
-    const type = match[1];
+    const type = match[1]!;
     const attrStr = match[2] ? match[2].trim() : "{}";
     const selfClosing = !!match[3];
 
@@ -521,7 +521,6 @@ export function registerPageBuilderTools(server: McpServer, client: WpClient): v
         }
 
         const { blockHtml, stats } = htmlToBlocks(v.html);
-        const blockCount = (blockHtml.match(/<!-- wp:/g) || []).length;
         // Each block has an opening comment, so count unique opening comments (not closing ones)
         const openingBlocks = (blockHtml.match(/<!-- wp:[a-z]/g) || []).length;
 

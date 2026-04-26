@@ -81,7 +81,7 @@ async function acfFetch<T>(
 /**
  * Check if a response has the `acf` key, indicating ACF is active.
  */
-function assertAcfPresent(data: Record<string, unknown>, toolName: string): void {
+function assertAcfPresent(data: Record<string, unknown>, _toolName: string): void {
   if (!("acf" in data) || data["acf"] === false) {
     throw new Error(
       `No ACF data found on this post. Possible reasons:\n` +

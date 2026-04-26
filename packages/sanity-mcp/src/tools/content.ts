@@ -5,6 +5,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { mcpError, mcpSuccess } from "@cmsmcp/shared";
 import type { SanityClient } from "../api/client.js";
+import type { SanityPatch } from "../types/index.js";
 import {
   QuerySchema,
   GetDocumentSchema,
@@ -83,10 +84,10 @@ export function registerContentTools(server: McpServer, client: SanityClient): v
     async (p) => {
       try {
         const v = UpdateDocumentSchema.parse(p);
-        const patch: Record<string, unknown> = { id: v.id };
-        if (v.set) patch["set"] = v.set;
-        if (v.unset) patch["unset"] = v.unset;
-        if (v.ifRevisionID) patch["ifRevisionID"] = v.ifRevisionID;
+        const patch: SanityPatch = { id: v.id };
+        if (v.set) patch.set = v.set;
+        if (v.unset) patch.unset = v.unset;
+        if (v.ifRevisionID) patch.ifRevisionID = v.ifRevisionID;
         const result = await client.mutate(
           [{ patch }],
           { returnIds: true, returnDocuments: true },

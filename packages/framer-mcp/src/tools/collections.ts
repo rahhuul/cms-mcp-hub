@@ -59,8 +59,8 @@ export function registerCollectionTools(server: McpServer, client: FramerClient)
         }
 
         const [fields, items] = await Promise.all([
-          framer.getCollectionFields2(collectionId),
-          framer.getCollectionItems2(collectionId),
+          collectionData.getFields(),
+          collectionData.getItems(),
         ]);
 
         const serializedFields: SerializedField[] = fields.map((f) => ({
@@ -133,11 +133,11 @@ export function registerCollectionTools(server: McpServer, client: FramerClient)
           fieldInput["cases"] = validated.enumCases;
         }
 
-        const createdFields = await framer.addCollectionFields2(
-          validated.collectionId,
-          [fieldInput as never],
-        );
-
+        const collection = await framer.getCollection(validated.collectionId);
+        if (!collection) {
+          return mcpError(new Error(`Collection '${validated.collectionId}' not found`), "framer_create_collection_field");
+        }
+        const createdFields = await collection.addFields([fieldInput as never]);
         const created = createdFields[0];
         return mcpSuccess({
           field: created ? { id: created.id, name: created.name, type: created.type } : null,
@@ -159,15 +159,17 @@ export function registerCollectionTools(server: McpServer, client: FramerClient)
         const validated = CreateCollectionItemSchema.parse(params);
         const framer = await client.getConnection();
 
-        const items = await framer.addCollectionItems2(validated.collectionId, [
-          {
-            slug: validated.slug,
-            draft: validated.draft,
-            fieldData: validated.fieldData as never,
-          },
-        ]);
-
-        const created = items[0];
+        const collection = await framer.getCollection(validated.collectionId);
+        if (!collection) {
+          return mcpError(new Error(`Collection '${validated.collectionId}' not found`), "framer_create_collection_item");
+        }
+        await collection.addItems([{
+          slug: validated.slug,
+          draft: validated.draft,
+          fieldData: validated.fieldData,
+        } as never]);
+        const allItems = await collection.getItems();
+        const created = allItems.find(i => i.slug === validated.slug);
         return mcpSuccess({
           item: created
             ? {
@@ -199,10 +201,16 @@ export function registerCollectionTools(server: McpServer, client: FramerClient)
         if (validated.draft !== undefined) attributes["draft"] = validated.draft;
         if (validated.fieldData !== undefined) attributes["fieldData"] = validated.fieldData;
 
-        const updated = await framer.setCollectionItemAttributes2(
-          validated.itemId,
-          attributes as never,
-        );
+        const collection = await framer.getCollection(validated.collectionId);
+        if (!collection) {
+          return mcpError(new Error(`Collection '${validated.collectionId}' not found`), "framer_update_collection_item");
+        }
+        const allItems = await collection.getItems();
+        const targetItem = allItems.find(i => i.id === validated.itemId);
+        if (!targetItem) {
+          return mcpError(new Error(`Item '${validated.itemId}' not found`), "framer_update_collection_item");
+        }
+        const updated = await targetItem.setAttributes(attributes as never);
 
         return mcpSuccess({
           item: updated
@@ -229,7 +237,8 @@ export function registerCollectionTools(server: McpServer, client: FramerClient)
       try {
         const { itemIds } = DeleteCollectionItemSchema.parse(params);
         const framer = await client.getConnection();
-        await framer.removeCollectionItems(itemIds);
+        const api = framer as unknown as { removeCollectionItems(ids: string[]): Promise<void> };
+        await api.removeCollectionItems(itemIds);
         return mcpSuccess({
           deleted: itemIds,
           message: `Deleted ${itemIds.length} item(s)`,

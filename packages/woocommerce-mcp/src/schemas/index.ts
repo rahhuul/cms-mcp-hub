@@ -12,8 +12,6 @@ const PaginationMixin = {
   per_page: z.number().min(1).max(100).default(25).describe("Items per page (max 100)"),
 };
 
-const IdSchema = (name: string) => z.object({ id: z.number().describe(`${name} ID`) });
-
 const ForceDeleteMixin = {
   force: z.boolean().default(false).describe("True to permanently delete (skip trash)"),
 };

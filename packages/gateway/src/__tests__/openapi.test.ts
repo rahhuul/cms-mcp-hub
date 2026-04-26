@@ -148,8 +148,8 @@ describe("generateOpenApiSpec", () => {
 
     const servers = spec["servers"] as Array<Record<string, unknown>>;
     expect(servers).toHaveLength(1);
-    expect(servers[0]["url"]).toBe(overrideUrl);
-    expect(servers[0]["description"]).toBe("CMS MCP Gateway");
+    expect(servers[0]!["url"]).toBe(overrideUrl);
+    expect(servers[0]!["description"]).toBe("CMS MCP Gateway");
   });
 
   it("uses baseUrl when no override", () => {
@@ -160,7 +160,7 @@ describe("generateOpenApiSpec", () => {
 
     const servers = spec["servers"] as Array<Record<string, unknown>>;
     expect(servers).toHaveLength(1);
-    expect(servers[0]["url"]).toBe(baseUrl);
+    expect(servers[0]!["url"]).toBe(baseUrl);
   });
 
   it("truncates long descriptions to 300 chars", () => {

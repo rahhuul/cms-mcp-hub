@@ -166,7 +166,7 @@ export function registerWorkflowTools(server: McpServer, client: WpClient): void
     "Comprehensive site audit: site info, active theme, plugin status, post/page counts, user counts, and health check — all in one report.",
     SiteAuditSchema.shape, async () => {
     try {
-      const [settings, themes, plugins, posts, pages, users, comments] = await Promise.all([
+      const [settings, themes, plugins] = await Promise.all([
         client.get<Record<string, unknown>>("settings"),
         client.get<Record<string, unknown>[]>("themes"),
         client.get<Record<string, unknown>[]>("plugins"),

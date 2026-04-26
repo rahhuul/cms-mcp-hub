@@ -27,8 +27,8 @@ describe("Gateway Server", () => {
         ],
       };
       expect(config.servers).toHaveLength(2);
-      expect(config.servers[0].name).toBe("wordpress");
-      expect(config.servers[1].name).toBe("woocommerce");
+      expect(config.servers[0]!.name).toBe("wordpress");
+      expect(config.servers[1]!.name).toBe("woocommerce");
     });
   });
 

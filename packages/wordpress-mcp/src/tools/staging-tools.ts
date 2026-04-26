@@ -322,7 +322,7 @@ export function registerStagingTools(server: McpServer, siteManager: SiteManager
               message: `No matching ${post_type.slice(0, -1)} with slug "${slug}" found on target site.`,
             });
           }
-          targetPost = matches[0];
+          targetPost = matches[0]!;
         }
 
         // Compare fields

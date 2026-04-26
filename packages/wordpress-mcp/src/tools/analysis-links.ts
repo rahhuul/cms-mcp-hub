@@ -39,7 +39,7 @@ async function withConcurrency<T>(
   const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
     while (i < items.length) {
       const idx = i++;
-      await fn(items[idx]);
+      await fn(items[idx]!);
     }
   });
   await Promise.all(workers);
@@ -50,7 +50,7 @@ function extractUrls(html: string): string[] {
   const urls: string[] = [];
   let m: RegExpExecArray | null;
   while ((m = re.exec(html)) !== null) {
-    const url = m[1].trim();
+    const url = m[1]!.trim();
     if (!url || SKIP_PROTOCOLS.some((p) => url.startsWith(p))) continue;
     urls.push(url);
   }
@@ -186,8 +186,8 @@ function analyzeImageTag(img: ImgTag): string[] {
   // Large image heuristic (check for dimension patterns in URL like -1920x1080)
   const dimMatch = img.src.match(/-(\d+)x(\d+)\./);
   if (dimMatch) {
-    const w = parseInt(dimMatch[1], 10);
-    const h = parseInt(dimMatch[2], 10);
+    const w = parseInt(dimMatch[1]!, 10);
+    const h = parseInt(dimMatch[2]!, 10);
     if (w > 2000 || h > 2000) {
       problems.push(`Potentially oversized image (${w}x${h}px) — consider smaller dimensions`);
     }
@@ -454,7 +454,6 @@ export function registerLinkAnalysisTools(server: McpServer, client: WpClient): 
 
         // Score calculation (0-100)
         let score = 100;
-        const maxDeductions = images.length > 0 ? images.length * 5 : 5; // normalize
         if (!featuredMedia || featuredMedia === 0) score -= 15;
         if (images.length === 0 && wordCount > 300) score -= 10;
         // Deduct for individual issues
@@ -505,7 +504,7 @@ export function registerLinkAnalysisTools(server: McpServer, client: WpClient): 
 
         while ((m = jsonLdRegex.exec(searchText)) !== null) {
           try {
-            const parsed = JSON.parse(m[1].trim());
+            const parsed = JSON.parse(m[1]!.trim());
             rawBlocks.push(parsed);
 
             // Handle @graph arrays (Yoast style)

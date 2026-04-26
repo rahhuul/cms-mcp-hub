@@ -92,7 +92,7 @@ function analyzeHeadings(content: string): SeoIssue[] {
   let match: RegExpExecArray | null;
 
   while ((match = headingRegex.exec(content)) !== null) {
-    headings.push({ level: parseInt(match[1], 10), text: stripHtml(match[2]) });
+    headings.push({ level: parseInt(match[1]!, 10), text: stripHtml(match[2]!) });
   }
 
   if (headings.length === 0) {
@@ -145,7 +145,7 @@ function analyzeImages(content: string): SeoIssue[] {
     const altMatch = /alt\s*=\s*["']([^"']*)["']/i.exec(img);
     if (!altMatch) {
       missingAlt++;
-    } else if (altMatch[1].trim() === "") {
+    } else if (altMatch[1]!.trim() === "") {
       emptyAlt++;
     }
   }
@@ -169,7 +169,7 @@ function analyzeLinks(content: string, siteUrl?: string): SeoIssue[] {
   let match: RegExpExecArray | null;
 
   while ((match = linkRegex.exec(content)) !== null) {
-    const href = match[1];
+    const href = match[1]!;
     const tag = match[0];
 
     if (href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:")) {

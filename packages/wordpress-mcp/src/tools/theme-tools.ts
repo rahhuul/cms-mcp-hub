@@ -179,7 +179,7 @@ export function registerThemeTools(server: McpServer, client: WpClient, pluginCl
           );
         }
 
-        const activeTheme = themes[0];
+        const activeTheme = themes[0]!;
         return mcpSuccess({
           theme: activeTheme["stylesheet"] ?? activeTheme["name"],
           theme_supports: activeTheme["theme_supports"] ?? {},

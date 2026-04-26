@@ -214,7 +214,7 @@ export function registerBlockEditorTools(server: McpServer, client: WpClient): v
     try {
       const { url } = GetUrlDetailsSchema.parse(p);
       // Use the wp-block-editor namespace
-      const baseUrl = (client as Record<string, unknown>)["baseUrl"] as string || "";
+      const baseUrl = (client as unknown as Record<string, unknown>)["baseUrl"] as string || "";
       const editorUrl = baseUrl.replace("/wp/v2", "/wp-block-editor/v1");
       return mcpSuccess(await client.get(`${editorUrl}/url-details`, { url }));
     } catch (e) { return mcpError(e, "wp_get_url_details"); }
@@ -222,7 +222,7 @@ export function registerBlockEditorTools(server: McpServer, client: WpClient): v
 
   server.tool("wp_get_navigation_fallback", "Get the default/fallback navigation menu for the site.", GetNavigationFallbackSchema.shape, async () => {
     try {
-      const baseUrl = (client as Record<string, unknown>)["baseUrl"] as string || "";
+      const baseUrl = (client as unknown as Record<string, unknown>)["baseUrl"] as string || "";
       const editorUrl = baseUrl.replace("/wp/v2", "/wp-block-editor/v1");
       return mcpSuccess(await client.get(`${editorUrl}/navigation-fallback`));
     } catch (e) { return mcpError(e, "wp_get_navigation_fallback"); }
@@ -230,7 +230,7 @@ export function registerBlockEditorTools(server: McpServer, client: WpClient): v
 
   server.tool("wp_export_site", "Export the entire WordPress site as a downloadable archive.", ExportSiteSchema.shape, async () => {
     try {
-      const baseUrl = (client as Record<string, unknown>)["baseUrl"] as string || "";
+      const baseUrl = (client as unknown as Record<string, unknown>)["baseUrl"] as string || "";
       const editorUrl = baseUrl.replace("/wp/v2", "/wp-block-editor/v1");
       return mcpSuccess(await client.get(`${editorUrl}/export`));
     } catch (e) { return mcpError(e, "wp_export_site"); }

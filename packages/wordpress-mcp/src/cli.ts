@@ -160,7 +160,7 @@ async function testConnection(url: string, username: string, appPassword: string
         headers: { Authorization: authHeader },
       });
       if (rootRes.ok) {
-        const rootData = (await rootRes.json()) as { description?: string; gmt_offset?: number };
+        await rootRes.json();
         // WP REST API root doesn't expose version directly in standard install
         // Try the generator meta or status endpoint
       }

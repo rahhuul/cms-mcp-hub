@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { normalizeUrl } from "../config.js";
 import { createToolGovernance } from "../tool-governance.js";
 import { SiteManager } from "../site-manager.js";
@@ -107,8 +107,8 @@ describe("SiteManager", () => {
     const mgr = new SiteManager(twoSiteConfig);
     const sites = mgr.listSites();
     expect(sites).toHaveLength(2);
-    expect(sites[0].active).toBe(true);
-    expect(sites[1].active).toBe(false);
+    expect(sites[0]!.active).toBe(true);
+    expect(sites[1]!.active).toBe(false);
   });
 
   it("throws on empty sites array", () => {

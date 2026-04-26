@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, afterEach } from "vitest";
 import { requireEnv, optionalEnv, optionalEnvInt } from "../env.js";
 
 describe("requireEnv", () => {

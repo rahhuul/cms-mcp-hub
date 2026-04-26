@@ -38,7 +38,6 @@ function heroBlock(d: { heading: string; subheading?: string; image_url?: string
 }
 
 function featuresBlock(d: { heading?: string; columns?: number; features: Array<{ icon?: string; title: string; description: string }> }): string {
-  const cols = d.columns || Math.min(d.features.length, 3);
   let out = "";
   if (d.heading) out += `<!-- wp:heading {"textAlign":"center","level":2} -->\n<h2 class="wp-block-heading has-text-align-center">${d.heading}</h2>\n<!-- /wp:heading -->\n\n<!-- wp:spacer {"height":"30px"} -->\n<div style="height:30px" aria-hidden="true" class="wp-block-spacer"></div>\n<!-- /wp:spacer -->\n\n`;
 

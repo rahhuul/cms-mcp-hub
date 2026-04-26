@@ -20,7 +20,7 @@ export function registerProjectTools(server: McpServer, client: FramerClient): v
     async () => {
       try {
         const framer = await client.getConnection();
-        const info = await framer.getProjectInfo2();
+        const info = await framer.getProjectInfo();
         return mcpSuccess(info);
       } catch (error) {
         return mcpError(error, "framer_get_project_info");

@@ -88,7 +88,7 @@ describe("McpBridge", () => {
     );
 
     // Verify env includes the custom env vars
-    const callArgs = (spawn as unknown as ReturnType<typeof vi.fn>).mock.calls[0];
+    const callArgs = (spawn as unknown as ReturnType<typeof vi.fn>).mock.calls[0]!;
     const options = callArgs[2] as { env: Record<string, string> };
     expect(options.env["API_KEY"]).toBe("xxx");
   });
@@ -172,8 +172,8 @@ describe("McpBridge", () => {
 
     expect(autoBridge.isReady()).toBe(true);
     expect(autoBridge.getTools()).toHaveLength(2);
-    expect(autoBridge.getTools()[0].name).toBe("test_tool");
-    expect(autoBridge.getTools()[1].name).toBe("test_tool_2");
+    expect(autoBridge.getTools()[0]!.name).toBe("test_tool");
+    expect(autoBridge.getTools()[1]!.name).toBe("test_tool_2");
   });
 
   it("calls a tool and returns parsed JSON result", async () => {

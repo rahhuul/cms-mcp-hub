@@ -57,7 +57,7 @@ describe("Data Item schemas", () => {
       sort: [{ fieldName: "name", order: "DESC" }],
     });
     expect(r.sort).toHaveLength(1);
-    expect(r.sort![0].order).toBe("DESC");
+    expect(r.sort![0]!.order).toBe("DESC");
   });
 
   it("GetDataItem requires both IDs", () => {

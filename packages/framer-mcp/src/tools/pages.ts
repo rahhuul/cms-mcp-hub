@@ -21,10 +21,10 @@ export function registerPageTools(server: McpServer, client: FramerClient): void
     async () => {
       try {
         const framer = await client.getConnection();
-        const pages = await framer.getNodesWithType(null, "WebPageNode");
+        const pages = await framer.getNodesWithType("WebPageNode");
 
         const result: SerializedPage[] = pages.map((p) => {
-          const attrs = p as Record<string, unknown>;
+          const attrs = p as unknown as Record<string, unknown>;
           return {
             id: p.id,
             name: (attrs["name"] as string | null) ?? null,
@@ -57,7 +57,7 @@ export function registerPageTools(server: McpServer, client: FramerClient): void
         }
 
         const children = await framer.getChildren(pageId);
-        const attrs = node as Record<string, unknown>;
+        const attrs = node as unknown as Record<string, unknown>;
 
         return mcpSuccess({
           page: {
@@ -72,8 +72,8 @@ export function registerPageTools(server: McpServer, client: FramerClient): void
           childCount: children.length,
           children: children.map((c) => ({
             id: c.id,
-            class: (c as Record<string, unknown>)["__class"] ?? "UnknownNode",
-            name: (c as Record<string, unknown>)["name"] ?? null,
+            class: (c as unknown as Record<string, unknown>)["__class"] ?? "UnknownNode",
+            name: (c as unknown as Record<string, unknown>)["name"] ?? null,
           })),
         });
       } catch (error) {
@@ -103,7 +103,7 @@ export function registerPageTools(server: McpServer, client: FramerClient): void
           return mcpError(new Error(`Page '${validated.pageId}' not found`), "framer_update_page");
         }
 
-        const updatedAttrs = updated as Record<string, unknown>;
+        const updatedAttrs = updated as unknown as Record<string, unknown>;
         return mcpSuccess({
           page: {
             id: updated.id,

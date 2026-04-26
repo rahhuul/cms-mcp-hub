@@ -12,13 +12,6 @@ import {
   UploadMediaSchema,
   ListVersionsSchema,
   RestoreVersionSchema,
-  GetVersionSchema,
-  PublishEntrySchema,
-  UnpublishEntrySchema,
-  GetCurrentUserSchema,
-  BulkCreateSchema,
-  BulkUpdateSchema,
-  BulkDeleteSchema,
 } from "../schemas/index.js";
 
 describe("Entry schemas", () => {

@@ -15,9 +15,6 @@ import {
   ListRolesSchema,
   GetLocalesSchema,
   CreateLocalizedEntrySchema,
-  ListLocalizationsSchema,
-  UpdateLocalizationSchema,
-  DeleteLocalizationSchema,
 } from "../schemas/index.js";
 
 export function registerSystemTools(server: McpServer, client: StrapiClient): void {

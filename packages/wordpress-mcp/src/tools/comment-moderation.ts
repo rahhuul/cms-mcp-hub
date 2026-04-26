@@ -145,16 +145,16 @@ export function registerCommentModerationTools(server: McpServer, client: WpClie
         const apiStatus = mapStatusToApi(v.action);
         const results = await Promise.allSettled(
           commentIds.map((id) =>
-            client.update<Record<string, unknown>>("comments", id, { status: apiStatus }),
+            client.put<Record<string, unknown>>(`comments/${id}`, { status: apiStatus }),
           ),
         );
 
         const moderationResults: ModerationResult[] = results.map((r, i) => {
           if (r.status === "fulfilled") {
-            return { id: commentIds[i], status: "success" as const, action: v.action };
+            return { id: commentIds[i]!, status: "success" as const, action: v.action };
           }
           return {
-            id: commentIds[i],
+            id: commentIds[i]!,
             status: "error" as const,
             error: r.reason instanceof Error ? r.reason.message : String(r.reason),
           };
@@ -405,15 +405,15 @@ export function registerCommentModerationTools(server: McpServer, client: WpClie
           const applyResults = await Promise.allSettled(
             actionable.map(async (a) => {
               const apiStatus = a.action === "approve" ? "approved" : a.action;
-              await client.update<Record<string, unknown>>("comments", a.comment_id, { status: apiStatus });
+              await client.put<Record<string, unknown>>(`comments/${a.comment_id}`, { status: apiStatus });
               a.applied = true;
             }),
           );
 
           // Mark failures
           for (let i = 0; i < applyResults.length; i++) {
-            if (applyResults[i].status === "rejected") {
-              actionable[i].applied = false;
+            if (applyResults[i]!.status === "rejected") {
+              actionable[i]!.applied = false;
             }
           }
         }

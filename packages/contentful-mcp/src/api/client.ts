@@ -13,11 +13,9 @@ import type { ContentfulConfig } from "../types/index.js";
 export class ContentfulClient {
   private readonly api: ApiClient;
   private readonly spaceApi: ApiClient;
-  private readonly config: ContentfulConfig;
   private readonly logger: Logger;
 
   constructor(config: ContentfulConfig) {
-    this.config = config;
     this.logger = createLogger("contentful");
 
     const envBaseUrl =
