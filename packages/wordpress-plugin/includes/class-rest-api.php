@@ -39,6 +39,7 @@ class CmsMcp_Rest_API {
 		self::register_builder_widget_route();
 		self::register_snapshot_routes();
 		self::register_analysis_routes();
+		self::register_wpcli_routes();
 	}
 
 	/**
@@ -809,7 +810,11 @@ class CmsMcp_Rest_API {
 		$post_id     = (int) $request->get_param( 'post_id' );
 		$snapshot_id = (int) $request->get_param( 'snapshot_id' );
 
-		$result = CmsMcp_Snapshot_Manager::restore_snapshot( $post_id, $snapshot_id );
+		try {
+			$result = CmsMcp_Snapshot_Manager::restore_snapshot( $snapshot_id );
+		} catch ( \RuntimeException $e ) {
+			return new WP_Error( 'cmsmcp_restore_failed', $e->getMessage(), array( 'status' => 422 ) );
+		}
 
 		if ( is_wp_error( $result ) ) {
 			return $result;
@@ -836,7 +841,11 @@ class CmsMcp_Rest_API {
 		$a       = (int) $request->get_param( 'a' );
 		$b       = (int) $request->get_param( 'b' );
 
-		$diff = CmsMcp_Snapshot_Manager::diff_snapshots( $post_id, $a, $b );
+		try {
+			$diff = CmsMcp_Snapshot_Manager::diff_snapshots( $a, $b );
+		} catch ( \RuntimeException $e ) {
+			return new WP_Error( 'cmsmcp_diff_failed', $e->getMessage(), array( 'status' => 422 ) );
+		}
 
 		if ( is_wp_error( $diff ) ) {
 			return $diff;
@@ -1960,5 +1969,131 @@ class CmsMcp_Rest_API {
 		}
 
 		return true;
+	}
+
+	// -------------------------------------------------------------------------
+	// WP-CLI routes
+	// -------------------------------------------------------------------------
+
+	private static function register_wpcli_routes(): void {
+		register_rest_route(
+			self::NAMESPACE,
+			'/wpcli/run',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( self::class, 'wpcli_run' ),
+				'permission_callback' => array( CmsMcp_Auth::class, 'check_permission' ),
+			)
+		);
+		register_rest_route(
+			self::NAMESPACE,
+			'/wpcli/export',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( self::class, 'wpcli_export' ),
+				'permission_callback' => array( CmsMcp_Auth::class, 'check_permission' ),
+			)
+		);
+		register_rest_route(
+			self::NAMESPACE,
+			'/wpcli/import',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( self::class, 'wpcli_import' ),
+				'permission_callback' => array( CmsMcp_Auth::class, 'check_permission' ),
+			)
+		);
+		register_rest_route(
+			self::NAMESPACE,
+			'/wpcli/search-replace',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( self::class, 'wpcli_search_replace' ),
+				'permission_callback' => array( CmsMcp_Auth::class, 'check_permission' ),
+			)
+		);
+	}
+
+	private static function run_wp_cli( array $args ): array {
+		if ( ! function_exists( 'shell_exec' ) ) {
+			return array( 'success' => false, 'error' => 'shell_exec is disabled on this server.' );
+		}
+
+		$wp_cli = trim( (string) shell_exec( 'which wp 2>/dev/null || where wp 2>nul' ) );
+		if ( empty( $wp_cli ) ) {
+			$wp_cli = 'wp';
+		}
+
+		$escaped = array_map( 'escapeshellarg', $args );
+		$cmd     = $wp_cli . ' ' . implode( ' ', $escaped ) . ' --path=' . escapeshellarg( ABSPATH ) . ' --allow-root 2>&1';
+		$output  = shell_exec( $cmd );
+
+		return array( 'success' => true, 'output' => $output ?? '' );
+	}
+
+	public static function wpcli_run( WP_REST_Request $request ) {
+		$command = sanitize_text_field( (string) $request->get_param( 'command' ) );
+		$args    = (array) ( $request->get_param( 'args' ) ?? array() );
+
+		$parts = array_merge( explode( ' ', $command ), $args );
+		$parts = array_filter( array_map( 'trim', $parts ) );
+
+		$result = self::run_wp_cli( array_values( $parts ) );
+		return new WP_REST_Response( $result, 200 );
+	}
+
+	public static function wpcli_export( WP_REST_Request $request ) {
+		$args = array( 'export' );
+
+		$post_type  = $request->get_param( 'post_type' );
+		$status     = $request->get_param( 'status' );
+		$start_date = $request->get_param( 'start_date' );
+		$end_date   = $request->get_param( 'end_date' );
+		$author     = $request->get_param( 'author' );
+
+		if ( $post_type )  $args[] = '--post_type=' . sanitize_text_field( $post_type );
+		if ( $status )     $args[] = '--post_status=' . sanitize_text_field( $status );
+		if ( $start_date ) $args[] = '--start_date=' . sanitize_text_field( $start_date );
+		if ( $end_date )   $args[] = '--end_date=' . sanitize_text_field( $end_date );
+		if ( $author )     $args[] = '--author=' . sanitize_text_field( (string) $author );
+
+		$upload_dir = wp_upload_dir();
+		$export_dir = trailingslashit( $upload_dir['path'] );
+		$args[]     = '--dir=' . $export_dir;
+
+		$result = self::run_wp_cli( $args );
+		if ( $result['success'] ) {
+			$result['export_dir'] = $export_dir;
+		}
+
+		return new WP_REST_Response( $result, 200 );
+	}
+
+	public static function wpcli_import( WP_REST_Request $request ) {
+		$source          = sanitize_text_field( (string) $request->get_param( 'source' ) );
+		$authors         = sanitize_text_field( (string) ( $request->get_param( 'authors' ) ?? 'skip' ) );
+		$skip_thumbnails = (bool) $request->get_param( 'skip_thumbnails' );
+
+		$args = array( 'import', $source, '--authors=' . $authors );
+		if ( $skip_thumbnails ) {
+			$args[] = '--skip=image_resize';
+		}
+
+		$result = self::run_wp_cli( $args );
+		return new WP_REST_Response( $result, 200 );
+	}
+
+	public static function wpcli_search_replace( WP_REST_Request $request ) {
+		$search  = (string) $request->get_param( 'search' );
+		$replace = (string) $request->get_param( 'replace' );
+		$dry_run = (bool) ( $request->get_param( 'dry_run' ) ?? true );
+
+		$args = array( 'search-replace', $search, $replace );
+		if ( $dry_run ) {
+			$args[] = '--dry-run';
+		}
+
+		$result = self::run_wp_cli( $args );
+		return new WP_REST_Response( $result, 200 );
 	}
 }

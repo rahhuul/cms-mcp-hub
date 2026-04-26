@@ -118,12 +118,19 @@ export function registerWorkflowTools(server: McpServer, client: WpClient): void
       if (updates.categories) cleanUpdates["categories"] = updates.categories;
       if (updates.author) cleanUpdates["author"] = updates.author;
 
-      const results: Array<{ id: number; success: boolean }> = [];
+      const results: Array<{ id: number; success: boolean; error?: string }> = [];
       for (const id of post_ids) {
         try {
-          await client.put(`posts/${id}`, cleanUpdates);
+          if (cleanUpdates["status"] === "trash" && Object.keys(cleanUpdates).length === 1) {
+            // WP REST API doesn't reliably accept status=trash via PUT; use DELETE (soft-delete)
+            await client.del(`posts/${id}`);
+          } else {
+            await client.put(`posts/${id}`, cleanUpdates);
+          }
           results.push({ id, success: true });
-        } catch { results.push({ id, success: false }); }
+        } catch (err) {
+          results.push({ id, success: false, error: err instanceof Error ? err.message : String(err) });
+        }
       }
 
       const succeeded = results.filter((r) => r.success).length;
