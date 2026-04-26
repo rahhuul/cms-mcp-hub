@@ -2,7 +2,7 @@
 
 MCP server for Framer -- 20 tools for managing CMS collections, pages, code components, project settings, and publishing.
 
-> Part of [CMS MCP Hub](https://github.com/rahhuul/cms-mcp-hub) -- 589 tools across 12 CMS platforms. If this is useful, [give it a star](https://github.com/rahhuul/cms-mcp-hub/stargazers)!
+> Part of [CMS MCP Hub](https://github.com/rahhuul/cms-mcp-hub) -- 757 tools across 12 CMS platforms. If this is useful, [give it a star](https://github.com/rahhuul/cms-mcp-hub/stargazers)!
 
 [![npm version](https://img.shields.io/npm/v/@cmsmcp/framer.svg)](https://www.npmjs.com/package/@cmsmcp/framer)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)

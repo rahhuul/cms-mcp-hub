@@ -2,7 +2,7 @@
 
 MCP server for Sanity -- 16 tools for GROQ queries, document CRUD, asset management, datasets, transactions, publishing, and history.
 
-> Part of [CMS MCP Hub](https://github.com/rahhuul/cms-mcp-hub) -- 589 tools across 12 CMS platforms. If this is useful, [give it a star](https://github.com/rahhuul/cms-mcp-hub/stargazers)!
+> Part of [CMS MCP Hub](https://github.com/rahhuul/cms-mcp-hub) -- 757 tools across 12 CMS platforms. If this is useful, [give it a star](https://github.com/rahhuul/cms-mcp-hub/stargazers)!
 
 [![npm version](https://img.shields.io/npm/v/@cmsmcp/sanity.svg)](https://www.npmjs.com/package/@cmsmcp/sanity)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)

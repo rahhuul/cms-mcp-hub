@@ -2,7 +2,7 @@
 
 MCP server for Payload CMS -- 21 tools for managing collections, entries, globals, media, access control, versions, and bulk operations.
 
-> Part of [CMS MCP Hub](https://github.com/rahhuul/cms-mcp-hub) -- 589 tools across 12 CMS platforms. If this is useful, [give it a star](https://github.com/rahhuul/cms-mcp-hub/stargazers)!
+> Part of [CMS MCP Hub](https://github.com/rahhuul/cms-mcp-hub) -- 757 tools across 12 CMS platforms. If this is useful, [give it a star](https://github.com/rahhuul/cms-mcp-hub/stargazers)!
 
 [![npm version](https://img.shields.io/npm/v/@cmsmcp/payload.svg)](https://www.npmjs.com/package/@cmsmcp/payload)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)

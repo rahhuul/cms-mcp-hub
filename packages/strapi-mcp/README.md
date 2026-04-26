@@ -2,7 +2,7 @@
 
 MCP server for Strapi -- 17 tools for managing content types, entries, media, users, roles, localization, and publish workflows.
 
-> Part of [CMS MCP Hub](https://github.com/rahhuul/cms-mcp-hub) -- 589 tools across 12 CMS platforms. If this is useful, [give it a star](https://github.com/rahhuul/cms-mcp-hub/stargazers)!
+> Part of [CMS MCP Hub](https://github.com/rahhuul/cms-mcp-hub) -- 757 tools across 12 CMS platforms. If this is useful, [give it a star](https://github.com/rahhuul/cms-mcp-hub/stargazers)!
 
 [![npm version](https://img.shields.io/npm/v/@cmsmcp/strapi.svg)](https://www.npmjs.com/package/@cmsmcp/strapi)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)

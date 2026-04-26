@@ -1,7 +1,7 @@
 <p align="center">
   <h1 align="center">CMS MCP Hub</h1>
   <p align="center">
-    <strong>589 MCP tools for managing CMS platforms with AI</strong>
+    <strong>757 MCP tools for managing CMS platforms with AI</strong>
   </p>
   <p align="center">
     Connect Claude, Cursor, Windsurf, Copilot, or any MCP client to WordPress, WooCommerce, Shopify, Framer, Strapi, Ghost, Webflow, Payload, Contentful, Wix, Yoast, and Sanity.
@@ -14,7 +14,7 @@
   <a href="https://www.npmjs.com/package/@cmsmcp/shopify"><img src="https://img.shields.io/npm/v/@cmsmcp/shopify.svg?label=shopify" alt="npm shopify"></a>
   <a href="https://www.npmjs.com/package/@cmsmcp/woocommerce"><img src="https://img.shields.io/npm/v/@cmsmcp/woocommerce.svg?label=woocommerce" alt="npm woocommerce"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a>
-  <a href="#packages"><img src="https://img.shields.io/badge/Tools-589-blue.svg" alt="589 Tools"></a>
+  <a href="#packages"><img src="https://img.shields.io/badge/Tools-757-blue.svg" alt="757 Tools"></a>
   <a href="#packages"><img src="https://img.shields.io/badge/Platforms-12-orange.svg" alt="12 Platforms"></a>
   <img src="https://img.shields.io/badge/TypeScript-strict-blue.svg" alt="TypeScript Strict">
   <img src="https://img.shields.io/badge/Node.js-18+-green.svg" alt="Node 18+">
@@ -70,7 +70,7 @@ Same JSON config format — just add to your client's MCP settings.
 
 | Package | CMS | Tools | Status | Install |
 |---------|-----|-------|--------|---------|
-| [`@cmsmcp/wordpress`](packages/wordpress-mcp/) | WordPress | **169** | Ready | `npx @cmsmcp/wordpress` |
+| [`@cmsmcp/wordpress`](packages/wordpress-mcp/) | WordPress | **337** | Ready | `npx @cmsmcp/wordpress` |
 | [`@cmsmcp/shopify`](packages/shopify-mcp/) | Shopify | **147** | Ready | `npx @cmsmcp/shopify` |
 | [`@cmsmcp/woocommerce`](packages/woocommerce-mcp/) | WooCommerce | **95** | Ready | `npx @cmsmcp/woocommerce` |
 | [`@cmsmcp/ghost`](packages/ghost-mcp/) | Ghost | **24** | Ready | `npx @cmsmcp/ghost` |
@@ -86,7 +86,7 @@ Same JSON config format — just add to your client's MCP settings.
 
 ## What can you do?
 
-### WordPress (169 tools)
+### WordPress (337 tools)
 
 | Category | Examples |
 |----------|---------|
@@ -95,16 +95,31 @@ Same JSON config format — just add to your client's MCP settings.
 | **Users** | Create users, manage roles, application passwords |
 | **Menus** | Create navigation menus with items in one call |
 | **Plugins** | Install, activate, deactivate, delete plugins |
-| **Themes** | List/switch themes |
-| **Blocks** | Reusable blocks, block types, patterns, block renderer |
+| **Themes & Customizer** | List/switch themes, read/write Customizer settings, export/import |
+| **Blocks & Patterns** | Reusable blocks, block types, patterns, block renderer, pattern directory |
+| **Block Editor** | Build Gutenberg content, create landing pages, component library (hero, pricing, FAQ…) |
 | **Site Editor** | Templates, template parts, navigation, global styles |
-| **Revisions** | Browse/restore post, page, template revisions |
+| **Revisions** | Browse/restore post, page, and template revisions |
 | **Fonts** | Manage font families and font faces |
-| **SEO** | Read/update Yoast SEO fields (title, description, keywords, OG) |
-| **Widgets** | Manage widget areas and widget instances |
-| **Workflows** | One-call post creation with categories + tags + image + SEO |
-| **Resources** | Browseable data sources (recent posts, drafts, calendar) |
-| **Prompts** | Templates (blog creator, SEO audit, site health report) |
+| **Widgets** | Manage widget areas and widget instances; block shortcuts |
+| **Custom Post Types** | Discover and CRUD any registered post type or taxonomy |
+| **ACF Deep Integration** | Read/write ACF fields, repeaters, flexible content; clone values; options pages |
+| **Page Builders** | Elementor, Divi, Bricks — read/write native JSON, update elements, design system |
+| **SEO & Analysis** | Yoast SEO, RankMath score, readability, broken links, image audit, structured data |
+| **WP-CLI Bridge** | Run WP-CLI commands, export/import WXR, database search-replace, cache flush |
+| **Staging & Migration** | Push/pull content between sites, compare, sync taxonomies and media |
+| **Bulk Operations** | Find/replace, meta updates, status changes, term assignment, mass delete |
+| **Snapshots & Backup** | Content snapshots, plugin snapshots, diff, restore, safe-update with rollback |
+| **Activity Log** | Log entries, undo actions, stats, export |
+| **Database Tools** | Table sizes, optimize, cleanup revisions/transients |
+| **WP-Cron** | List/run/delete scheduled events, schedule status check |
+| **Security** | Comprehensive security audit, file permissions, content XSS scan |
+| **Multisite** | List/create/update/delete network sites, network plugins/themes |
+| **Email Tools** | Test delivery, check DNS (SPF/DKIM/DMARC), get email log |
+| **Stock Images** | Search Openverse, sideload into media library |
+| **Advanced Media** | Audit, regenerate thumbnails, bulk alt text, find unused, replace media |
+| **Multi-Site Manager** | Switch active site, list configured sites |
+| **Workflows** | One-call full post creation with categories + tags + image + SEO |
 
 ### Shopify (147 tools)
 
@@ -209,7 +224,7 @@ Features:
 cms-mcp-hub/
 ├── packages/
 │   ├── shared/              # ApiClient, error handling, pagination, rate limiting
-│   ├── wordpress-mcp/       # 169 tools — WordPress REST API v2
+│   ├── wordpress-mcp/       # 337 tools — WordPress REST API v2 + companion plugin
 │   ├── shopify-mcp/         # 147 tools — Shopify Admin REST API
 │   ├── woocommerce-mcp/     # 95 tools — WooCommerce REST API v3
 │   ├── ghost-mcp/           # 24 tools — Ghost Admin API (JWT)
@@ -343,7 +358,7 @@ SANITY_DATASET=production                    # Optional, defaults to production
 
 ## Why CMS MCP Hub?
 
-- **589 tools** across 12 CMS platforms — the most comprehensive MCP CMS integration
+- **757 tools** across 12 CMS platforms — the most comprehensive MCP CMS integration
 - **No plugins required** — connects directly via official APIs
 - **One command** — `npx @cmsmcp/wordpress` and you're connected
 - **AI-native** — tool descriptions designed for LLMs to use correctly

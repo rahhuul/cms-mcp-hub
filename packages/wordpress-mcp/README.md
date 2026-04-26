@@ -61,7 +61,9 @@ Same JSON config format — add to your client's MCP settings file.
 
 ### CMS MCP Hub Plugin (Optional — unlocks 100+ extra tools)
 
-Install the companion WordPress plugin to unlock plugin-dependent tools (WP-CLI bridge, database tools, cron management, activity log, staging workflows, Bricks builder, and more):
+Install the companion WordPress plugin to unlock plugin-dependent tools (WP-CLI bridge, database tools, cron management, activity log, staging workflows, Bricks builder, and more).
+
+Get the plugin from [packages/wordpress-plugin](https://github.com/rahhuul/cms-mcp-hub/tree/master/packages/wordpress-plugin) and add your API key to the MCP server config:
 
 ```json
 {
@@ -69,11 +71,12 @@ Install the companion WordPress plugin to unlock plugin-dependent tools (WP-CLI 
     "WORDPRESS_URL": "https://mysite.com",
     "WORDPRESS_USERNAME": "admin",
     "WORDPRESS_APP_PASSWORD": "xxxx xxxx xxxx",
-    "CMSMCP_PLUGIN_URL": "https://mysite.com/wp-json/cmsmcp/v1",
-    "CMSMCP_PLUGIN_SECRET": "your-plugin-secret"
+    "CMSMCP_API_KEY": "your-plugin-api-key"
   }
 }
 ```
+
+The plugin URL (`/wp-json/cmsmcp/v1`) is derived automatically from `WORDPRESS_URL`. Generate the API key from the plugin's settings page in WP Admin.
 
 ## Available Tools (337 tools)
 
